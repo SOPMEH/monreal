@@ -335,14 +335,230 @@
     .fame-badge-purple { background: rgba(136,102,255,.12);color: #AA88FF; border: 1px solid rgba(136,102,255,.2); }
     .fame-badge-blue   { background: rgba(68,120,255,.1);  color: #88AAFF; border: 1px solid rgba(68,120,255,.2); }
 
+    /* ── Particles canvas ── */
+    #particles { position:absolute; inset:0; pointer-events:none; z-index:0; }
+
+    /* ── Typing cursor ── */
+    .typing-cursor { display:inline-block; width:2px; height:1em; background:var(--gold3); margin-left:2px; vertical-align:middle; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Gallery ── */
+    .gallery-grid {
+      columns: 3; column-gap: 12px;
+    }
+    .gallery-item {
+      break-inside: avoid; margin-bottom: 12px; position: relative;
+      border-radius: 12px; overflow: hidden; cursor: pointer;
+      border: 1px solid var(--border);
+    }
+    .gallery-item img {
+      width: 100%; display: block;
+      transition: transform .4s ease, filter .3s ease;
+      filter: brightness(.9);
+    }
+    .gallery-item:hover img { transform: scale(1.04); filter: brightness(1.05); }
+    .gallery-overlay {
+      position:absolute; inset:0; background: linear-gradient(to top, rgba(3,8,5,.85) 0%, transparent 55%);
+      opacity:0; transition: opacity .3s;
+      display:flex; align-items:flex-end; padding:14px;
+    }
+    .gallery-item:hover .gallery-overlay { opacity:1; }
+    .gallery-caption { font-size:.78rem; font-weight:600; color:var(--text); }
+
+    /* Lightbox */
+    .lightbox {
+      position:fixed; inset:0; z-index:999; background:rgba(0,0,0,.92);
+      display:none; align-items:center; justify-content:center;
+      backdrop-filter: blur(8px);
+    }
+    .lightbox.open { display:flex; }
+    .lightbox img { max-width:90vw; max-height:88vh; border-radius:10px; box-shadow:0 0 60px rgba(0,0,0,.8); }
+    .lightbox-close {
+      position:absolute; top:20px; right:24px;
+      font-size:1.6rem; color:var(--text2); cursor:pointer; background:none; border:none;
+      transition:color .2s;
+    }
+    .lightbox-close:hover { color:var(--gold2); }
+    .lightbox-arrow {
+      position:absolute; top:50%; transform:translateY(-50%);
+      font-size:2rem; color:var(--text2); cursor:pointer; background:rgba(3,8,5,.7);
+      border:1px solid var(--border); border-radius:8px; padding:6px 14px;
+      transition:all .2s; user-select:none;
+    }
+    .lightbox-arrow:hover { color:var(--gold2); border-color:var(--accent3); }
+    .lightbox-prev { left:16px; }
+    .lightbox-next { right:16px; }
+    .lightbox-caption {
+      position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
+      font-size:.82rem; color:var(--text2); background:rgba(3,8,5,.8);
+      border:1px solid var(--border); border-radius:8px; padding:6px 16px;
+      white-space:nowrap;
+    }
+
+    /* ── Timeline / Changelog ── */
+    .timeline { position:relative; padding-left:28px; }
+    .timeline::before {
+      content:''; position:absolute; left:7px; top:8px; bottom:8px; width:2px;
+      background: linear-gradient(180deg, var(--accent3) 0%, var(--border) 100%);
+      border-radius:2px;
+    }
+    .timeline-item {
+      position:relative; margin-bottom:28px;
+      background:var(--card); border:1px solid var(--border); border-radius:14px;
+      padding:22px 22px 20px; transition: border-color .2s, transform .2s;
+    }
+    .timeline-item:hover { border-color:var(--border2); transform:translateX(4px); }
+    .timeline-item::before {
+      content:''; position:absolute; left:-24px; top:22px;
+      width:10px; height:10px; border-radius:50%;
+      background:var(--accent3); border:2px solid var(--bg);
+      box-shadow:0 0 8px rgba(34,204,102,.4);
+    }
+    .timeline-item.latest::before { background:var(--gold2); box-shadow:0 0 10px rgba(68,255,136,.6); }
+    .timeline-date {
+      font-family:'JetBrains Mono',monospace; font-size:.68rem; font-weight:700;
+      color:var(--accent3); letter-spacing:.1em; margin-bottom:6px;
+    }
+    .timeline-item.latest .timeline-date { color:var(--gold3); }
+    .timeline-version {
+      font-size:.95rem; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:10px;
+    }
+    .version-badge {
+      font-size:.62rem; font-weight:700; padding:2px 8px; border-radius:4px;
+      background:rgba(34,204,102,.12); color:#44EE88; border:1px solid rgba(34,204,102,.25);
+    }
+    .version-badge.new { background:rgba(255,215,0,.1); color:#FFD740; border-color:rgba(255,215,0,.3); }
+    .timeline-changes { list-style:none; margin-top:10px; display:flex; flex-direction:column; gap:5px; }
+    .timeline-changes li {
+      font-size:.81rem; color:var(--text2); padding-left:16px; position:relative; line-height:1.5;
+    }
+    .timeline-changes li::before { content:'→'; position:absolute; left:0; color:var(--accent3); font-size:.75rem; }
+
+    /* ── FAQ ── */
+    .faq-list { display:flex; flex-direction:column; gap:8px; }
+    .faq-item {
+      background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+      transition:border-color .2s;
+    }
+    .faq-item.open { border-color:var(--border2); }
+    .faq-question {
+      width:100%; padding:18px 22px; display:flex; align-items:center; justify-content:space-between;
+      cursor:pointer; background:none; border:none; color:var(--text);
+      font-size:.88rem; font-weight:700; font-family:'Inter',sans-serif; text-align:left; gap:12px;
+    }
+    .faq-question:hover { color:var(--gold3); }
+    .faq-arrow {
+      font-size:1rem; color:var(--text3); transition:transform .3s; flex-shrink:0;
+    }
+    .faq-item.open .faq-arrow { transform:rotate(180deg); color:var(--accent3); }
+    .faq-answer {
+      max-height:0; overflow:hidden; transition:max-height .35s ease, padding .3s;
+      font-size:.82rem; color:var(--text2); line-height:1.65;
+      padding:0 22px;
+    }
+    .faq-item.open .faq-answer { max-height:300px; padding:0 22px 18px; }
+    .faq-answer code {
+      font-family:'JetBrains Mono',monospace; font-size:.78rem;
+      background:var(--bg3); border:1px solid var(--border); padding:1px 6px; border-radius:4px; color:var(--gold3);
+    }
+
+    /* ── Live status ── */
+    .stat-live { position:relative; }
+    .stat-live::after {
+      content:'LIVE'; position:absolute; top:-6px; right:-28px;
+      font-size:.45rem; font-weight:800; letter-spacing:.1em;
+      color:var(--green); background:rgba(34,204,102,.12); border:1px solid rgba(34,204,102,.3);
+      padding:1px 4px; border-radius:3px;
+    }
+
+    /* ── Mobile nav burger ── */
+    .burger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer;
+      padding: 6px; border: none; background: transparent;
+    }
+    .burger span {
+      display: block; width: 22px; height: 2px; background: var(--text2);
+      border-radius: 2px; transition: all .3s;
+    }
+    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--gold); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--gold); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 62px; left: 0; right: 0; z-index: 99;
+      background: rgba(3,8,5,0.97); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column; padding: 16px 24px 24px;
+      gap: 4px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text2); text-decoration: none; font-size: .95rem; font-weight: 600;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+      transition: color .2s;
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--gold2); }
+
     @media (max-width: 768px) {
-      nav { padding: 0 20px; }
+      /* Nav */
+      nav { padding: 0 18px; }
       .nav-links { display: none; }
-      section { padding: 56px 20px; }
-      .download-hero { padding: 24px; }
-      .hero-stats { gap: 20px; padding: 16px 22px; }
-      .ip-banner { flex-direction: column; align-items: flex-start; }
-      .divider { margin: 0 20px; }
+      .nav-ip span:last-child { display: none; }
+      .nav-ip { padding: 6px 10px; }
+      .burger { display: flex; }
+
+      /* Layout */
+      section { padding: 48px 18px; }
+      .divider { margin: 0 18px; }
+
+      /* Hero */
+      .hero { padding: 90px 18px 48px; min-height: auto; }
+      .hero-actions { flex-direction: column; align-items: center; width: 100%; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
+      .hero-stats { gap: 14px; padding: 16px 18px; margin-top: 36px; }
+      .hero-stats .stat-sep { display: none; }
+      .hero-stats .stat { flex: 1; min-width: 70px; }
+      .stat-value { font-size: 1.2rem; }
+
+      /* Download */
+      .download-hero { padding: 22px 18px; flex-direction: column; }
+      .download-actions { width: 100%; }
+      .download-actions .btn { width: 100%; justify-content: center; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .step-card { padding: 16px; }
+
+      /* Mods */
+      .mods-grid { grid-template-columns: 1fr; }
+      .mods-filter { gap: 6px; }
+      .filter-btn { font-size: .7rem; padding: 4px 11px; }
+
+      /* Fame */
+      .fame-grid { grid-template-columns: 1fr; gap: 14px; }
+      .fame-card { padding: 28px 20px 22px; }
+
+      /* IP */
+      .ip-banner { flex-direction: column; align-items: flex-start; gap: 16px; padding: 22px 18px; }
+      .ip-box { width: 100%; }
+      .ip-addr { flex: 1; font-size: .85rem; }
+      .ip-copy { white-space: nowrap; }
+
+      /* Footer */
+      footer { padding: 28px 18px; }
+    }
+
+    @media (max-width: 768px) {
+      .gallery-grid { columns: 2; }
+      .timeline { padding-left: 22px; }
+      .timeline-item { padding: 16px; }
+    }
+    @media (max-width: 420px) {
+      .steps { grid-template-columns: 1fr; }
+      .hero-stats { flex-wrap: wrap; }
+      .hero-stats .stat { min-width: 80px; }
+      .fame-badges { gap: 5px; }
+      .gallery-grid { columns: 1; }
+      .lightbox-arrow { font-size: 1.4rem; padding: 4px 10px; }
     }
   </style>
 </head>
@@ -353,17 +569,36 @@
   <ul class="nav-links">
     <li><a href="#download">Скачать</a></li>
     <li><a href="#mods">Моды</a></li>
+    <li><a href="#gallery">Галерея</a></li>
     <li><a href="#fame">Слава</a></li>
-    <li><a href="#connect">IP сервера</a></li>
+    <li><a href="#changelog">Новости</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#connect">IP</a></li>
   </ul>
-  <div class="nav-ip" onclick="copyIP()">
-    <span class="dot"></span>
-    <span>epyc2.worldhosts.fun:26163</span>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="nav-ip" onclick="copyIP()">
+      <span class="dot"></span>
+      <span>epyc2.worldhosts.fun:26163</span>
+    </div>
+    <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#download"  onclick="closeMenu()">⬇ Скачать модпак</a>
+  <a href="#mods"      onclick="closeMenu()">🧩 Список модов</a>
+  <a href="#gallery"   onclick="closeMenu()">📸 Галерея</a>
+  <a href="#fame"      onclick="closeMenu()">⭐ Стена Славы</a>
+  <a href="#changelog" onclick="closeMenu()">📰 Новости</a>
+  <a href="#faq"       onclick="closeMenu()">❓ FAQ</a>
+  <a href="#connect"   onclick="closeMenu()">🔗 IP сервера</a>
+</div>
+
 <!-- ── Hero ─────────────────────────────────────────────────────── -->
 <div class="hero">
+  <canvas id="particles"></canvas>
   <div class="hero-badge">
     Fabric &nbsp;<span>1.21.11</span>&nbsp; · &nbsp;Vanilla+
   </div>
@@ -376,11 +611,11 @@
   <div class="hero-stats">
     <div class="stat"><div class="stat-value">1.21</div><div class="stat-label">Версия</div></div>
     <div class="stat-sep"></div>
-    <div class="stat"><div class="stat-value">Fabric</div><div class="stat-label">Загрузчик</div></div>
-    <div class="stat-sep"></div>
     <div class="stat"><div class="stat-value">50+</div><div class="stat-label">Модов</div></div>
     <div class="stat-sep"></div>
-    <div class="stat"><div class="stat-value">24/7</div><div class="stat-label">Онлайн</div></div>
+    <div class="stat stat-live"><div class="stat-value" id="onlineStat">—</div><div class="stat-label">Онлайн</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-value" id="daysStat">—</div><div class="stat-label">Дней живём</div></div>
   </div>
 </div>
 
@@ -911,6 +1146,141 @@
 
 <div class="divider"></div>
 
+<!-- ── Gallery ───────────────────────────────────────────────────── -->
+<section id="gallery">
+  <div class="section-label">Мир MONREAL</div>
+  <h2>Галерея <span>скриншотов</span></h2>
+  <p class="section-desc">Реальные места и постройки с нашего сервера. Нажми на фото для просмотра.</p>
+
+  <div class="gallery-grid">
+    <div class="gallery-item" onclick="openLightbox(0)">
+      <img src="screenshots/screen1.jpg" alt="Библиотека под сакурой" loading="lazy" />
+      <div class="gallery-overlay"><span class="gallery-caption">🌸 Библиотека под сакурой</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(1)">
+      <img src="screenshots/screen2.jpg" alt="Ночная башня" loading="lazy" />
+      <div class="gallery-overlay"><span class="gallery-caption">🌃 Ночная башня</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(2)">
+      <img src="screenshots/screen3.jpg" alt="Закат над вишнёвым садом" loading="lazy" />
+      <div class="gallery-overlay"><span class="gallery-caption">🌅 Закат над вишнёвым садом</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(3)">
+      <img src="screenshots/screen4.jpg" alt="Усадьба на закате" loading="lazy" />
+      <div class="gallery-overlay"><span class="gallery-caption">🏡 Усадьба на закате</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(4)">
+      <img src="screenshots/screen5.jpg" alt="Пещерный сад сакуры" loading="lazy" />
+      <div class="gallery-overlay"><span class="gallery-caption">🍄 Пещерный сад сакуры</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-arrow lightbox-prev" onclick="lightboxNav(-1)">‹</button>
+  <img id="lightboxImg" src="" alt="" />
+  <button class="lightbox-arrow lightbox-next" onclick="lightboxNav(1)">›</button>
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── Changelog ─────────────────────────────────────────────────── -->
+<section id="changelog">
+  <div class="section-label">История сервера</div>
+  <h2>Обновления <span>& Новости</span></h2>
+  <p class="section-desc">Что происходило на сервере — версии, события, изменения.</p>
+
+  <div class="timeline">
+
+    <div class="timeline-item latest">
+      <div class="timeline-date">14 ФЕВРАЛЯ 2026</div>
+      <div class="timeline-version">
+        MONREAL (E) 1.0.0 — Запуск
+        <span class="version-badge new">ПЕРВАЯ ВЕРСИЯ</span>
+      </div>
+      <ul class="timeline-changes">
+        <li>Запущен сервер MONREAL на Fabric 1.21.11</li>
+        <li>Собрана сборка из 50+ модов — производительность, визуал, механики</li>
+        <li>Установлена кастомная авторизация MONREAL Auth с красивым UI</li>
+        <li>Голосовой чат через Simple Voice Chat</li>
+        <li>Первые игроки зашли на сервер и начали строить мир</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FAQ ───────────────────────────────────────────────────────── -->
+<section id="faq">
+  <div class="section-label">Помощь</div>
+  <h2>Частые <span>вопросы</span></h2>
+  <p class="section-desc">Ответы на самые популярные вопросы новых игроков.</p>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Как зайти на сервер первый раз?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-answer">
+        Скачай модпак, импортируй в Modrinth App, запусти игру и добавь сервер: <code>epyc2.worldhosts.fun:26163</code>. При первом входе появится экран регистрации — придумай пароль (минимум 4 символа) и ты в игре!
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Что делать если забыл пароль?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-answer">
+        Напиши администратору — он сможет сбросить пароль вручную. Если помнишь пароль, можешь сменить его командой <code>/changepassword &lt;старый&gt; &lt;новый&gt;</code>.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Почему у меня нет шейдеров?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-answer">
+        Шейдеры нужно скачать и установить отдельно через Iris. Нажми <code>O</code> в игре → Шейдер-паки → добавь любой шейдер. Рекомендуем Complementary Reimagined или BSL.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Голосовой чат не работает — что делать?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-answer">
+        Нажми <code>V</code> в игре чтобы открыть настройки голосового чата. Убедись что выбрано правильное устройство ввода. Иногда помогает перезайти на сервер или переустановить мод Simple Voice Chat.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Можно ли играть с пиратским аккаунтом?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-answer">
+        Да! Сервер работает в офлайн-режиме, SkinsRestorer обеспечивает скины для всех. Авторизация через MONREAL Auth защищает твой аккаунт по паролю.
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Как добыть всю жилу руды сразу?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-answer">
+        Используй VeinMiner! Зачаруй инструмент на «Vein Miner» на столе зачарований, затем держи <code>Ctrl</code> при добыче — вся жила добудется одним ударом.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- ── Connect ────────────────────────────────────────────────────── -->
 <section id="connect">
   <div class="section-label">Подключение</div>
@@ -943,11 +1313,22 @@
 
 <script>
   const SERVER_IP = 'epyc2.worldhosts.fun:26163';
+  const LAUNCH_DATE = new Date('2026-02-14');
 
+  /* ── Menu ── */
+  function toggleMenu() {
+    document.getElementById('burger').classList.toggle('open');
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('burger').classList.remove('open');
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  /* ── Copy IP ── */
   function copyIP() {
     navigator.clipboard.writeText(SERVER_IP).then(() => showToast('IP скопирован!'));
   }
-
   function showToast(text) {
     const t = document.getElementById('toast');
     document.getElementById('toastText').textContent = text;
@@ -955,6 +1336,7 @@
     setTimeout(() => t.classList.remove('show'), 2400);
   }
 
+  /* ── Filter mods ── */
   function filterMods(tag, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -964,39 +1346,177 @@
     });
   }
 
-  // Добавляем кнопки-ссылки к каждому моду
+  /* ── Mod links ── */
   document.querySelectorAll('.mod-card[data-url]').forEach(card => {
     const url = card.dataset.url;
     const isGithub = card.dataset.linkType === 'github';
     const tagsEl = card.querySelector('.mod-tags');
     if (tagsEl) {
       const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
+      link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
       link.className = isGithub ? 'mod-link mod-link-github' : 'mod-link mod-link-modrinth';
       link.innerHTML = isGithub ? '⬇ GitHub' : '↗ Modrinth';
       tagsEl.appendChild(link);
     }
   });
 
-  // Анимация при скролле
+  /* ── Days counter ── */
+  function updateDays() {
+    const days = Math.floor((Date.now() - LAUNCH_DATE) / 86400000);
+    const el = document.getElementById('daysStat');
+    if (el) el.textContent = days >= 0 ? days : '0';
+  }
+  updateDays();
+
+  /* ── Live server status ── */
+  async function fetchServerStatus() {
+    try {
+      const r = await fetch('https://api.mcsrvstat.us/3/' + SERVER_IP);
+      const d = await r.json();
+      const el = document.getElementById('onlineStat');
+      if (!el) return;
+      if (d.online) {
+        el.textContent = (d.players?.online ?? 0) + '/' + (d.players?.max ?? '?');
+        el.style.color = 'var(--gold2)';
+      } else {
+        el.textContent = 'офлайн';
+        el.style.color = 'var(--text3)';
+      }
+    } catch(e) {
+      const el = document.getElementById('onlineStat');
+      if (el) el.textContent = '—';
+    }
+  }
+  fetchServerStatus();
+  setInterval(fetchServerStatus, 30000);
+
+  /* ── Lightbox ── */
+  const galleryData = [
+    { src: 'screenshots/screen1.jpg', caption: '🌸 Библиотека под сакурой' },
+    { src: 'screenshots/screen2.jpg', caption: '🌃 Ночная башня' },
+    { src: 'screenshots/screen3.jpg', caption: '🌅 Закат над вишнёвым садом' },
+    { src: 'screenshots/screen4.jpg', caption: '🏡 Усадьба на закате' },
+    { src: 'screenshots/screen5.jpg', caption: '🍄 Пещерный сад сакуры' },
+  ];
+  let lbIdx = 0;
+
+  function openLightbox(i) {
+    lbIdx = i;
+    renderLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeLightboxBg(e) { if (e.target === document.getElementById('lightbox')) closeLightbox(); }
+  function lightboxNav(d) {
+    lbIdx = (lbIdx + d + galleryData.length) % galleryData.length;
+    renderLightbox();
+  }
+  function renderLightbox() {
+    document.getElementById('lightboxImg').src = galleryData[lbIdx].src;
+    document.getElementById('lightboxCaption').textContent = galleryData[lbIdx].caption;
+  }
+  document.addEventListener('keydown', e => {
+    const lb = document.getElementById('lightbox');
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') lightboxNav(1);
+    if (e.key === 'ArrowLeft')  lightboxNav(-1);
+  });
+
+  /* ── FAQ ── */
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  /* ── Particles ── */
+  (function() {
+    const canvas = document.getElementById('particles');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const COUNT = window.innerWidth < 600 ? 30 : 60;
+    for (let i = 0; i < COUNT; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.8 + 0.4,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -Math.random() * 0.4 - 0.1,
+        alpha: Math.random() * 0.5 + 0.1,
+        life: Math.random()
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.life += 0.003;
+        if (p.y < -10 || p.life > 1) {
+          p.x = Math.random() * W; p.y = H + 5;
+          p.life = 0; p.alpha = Math.random() * 0.5 + 0.1;
+        }
+        const a = p.alpha * Math.sin(p.life * Math.PI);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(34,204,102,${a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  /* ── Typing effect ── */
+  (function() {
+    const el = document.querySelector('.hero-sub');
+    if (!el) return;
+    const text = el.textContent;
+    el.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'typing-cursor';
+    el.appendChild(cursor);
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        el.insertBefore(document.createTextNode(text[i++]), cursor);
+        setTimeout(type, 28 + Math.random() * 20);
+      }
+    }
+    setTimeout(type, 600);
+  })();
+
+  /* ── Scroll animation ── */
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
       if (e.isIntersecting) {
         setTimeout(() => {
           e.target.style.opacity = '1';
-          e.target.style.transform = 'translateY(0)';
-        }, i * 55);
+          e.target.style.transform = e.target.dataset.animFrom || 'translateY(0)';
+        }, i * 60);
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.08 });
+  }, { threshold: 0.07 });
 
-  document.querySelectorAll('.mod-card, .step-card').forEach(el => {
+  document.querySelectorAll('.mod-card, .step-card, .fame-card, .timeline-item, .faq-item, .gallery-item').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(18px)';
-    el.style.transition = 'opacity .4s ease, transform .4s ease, border-color .2s, box-shadow .2s';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .45s ease, transform .45s ease, border-color .2s, box-shadow .2s';
     io.observe(el);
   });
 </script>
