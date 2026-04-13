@@ -2047,10 +2047,10 @@
       wrap.appendChild(span);
       letters.push(span);
     });
-    // После появления — все буквы левитируют синхронно
+    // После появления — каждая буква левитирует в своей фазе (отриц. delay = старт сразу)
     setTimeout(() => {
-      letters.forEach((s) => {
-        s.style.animationDelay = '0ms';
+      letters.forEach((s, i) => {
+        s.style.animationDelay = -(i * 500) + 'ms';
         s.classList.add('revealed');
       });
     }, word.length * 90 + 800);
