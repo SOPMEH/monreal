@@ -342,6 +342,70 @@
     .typing-cursor { display:inline-block; width:2px; height:1em; background:var(--gold3); margin-left:2px; vertical-align:middle; animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
+    /* ── Mechanics ── */
+    .mechanics-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;
+    }
+    .mechanic-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 24px 20px; position: relative; overflow: hidden;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .mechanic-card:hover { transform: translateY(-3px); border-color: var(--border2); box-shadow: 0 10px 32px rgba(0,0,0,.3); }
+    .mechanic-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, transparent, var(--accent3), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .mechanic-card:hover::before { opacity: 1; }
+    .mechanic-icon {
+      font-size: 2rem; margin-bottom: 14px; display: block;
+      filter: drop-shadow(0 0 8px rgba(34,204,102,.3));
+    }
+    .mechanic-name {
+      font-size: .95rem; font-weight: 800; margin-bottom: 6px; color: var(--text);
+    }
+    .mechanic-desc {
+      font-size: .8rem; color: var(--text2); line-height: 1.6;
+    }
+    .mechanic-tag {
+      display: inline-flex; align-items: center; margin-top: 12px;
+      font-size: .65rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+      background: rgba(34,204,102,.1); color: var(--accent3); border: 1px solid rgba(34,204,102,.2);
+      letter-spacing: .06em;
+    }
+
+    /* ── Discord ── */
+    .discord-wrap {
+      display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start;
+    }
+    .discord-info { display: flex; flex-direction: column; gap: 16px; }
+    .discord-info h3 { font-size: 1.2rem; font-weight: 800; }
+    .discord-info p { font-size: .85rem; color: var(--text2); line-height: 1.65; }
+    .discord-features { display: flex; flex-direction: column; gap: 10px; }
+    .discord-feature {
+      display: flex; align-items: center; gap: 12px;
+      font-size: .82rem; color: var(--text2);
+    }
+    .discord-feature span:first-child { font-size: 1.1rem; }
+    .discord-btn {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 6px;
+      padding: 11px 22px; border-radius: 8px; font-size: .88rem; font-weight: 700;
+      text-decoration: none; transition: all .2s;
+      background: #5865F2; color: #fff; box-shadow: 0 4px 20px rgba(88,101,242,.35);
+      width: fit-content;
+    }
+    .discord-btn:hover { background: #4752C4; box-shadow: 0 4px 28px rgba(88,101,242,.5); transform: translateY(-1px); }
+    .discord-widget-wrap {
+      border-radius: 14px; overflow: hidden; border: 1px solid var(--border);
+      background: var(--card);
+    }
+    .discord-widget-wrap iframe { display: block; border-radius: 14px; }
+    @media (max-width: 900px) {
+      .discord-wrap { grid-template-columns: 1fr; }
+      .discord-widget-wrap iframe { width: 100% !important; }
+    }
+
     /* ── Map ── */
     .map-card {
       position: relative; background: var(--card); border: 1px solid var(--border);
@@ -640,7 +704,8 @@
     <li><a href="#download">Скачать</a></li>
     <li><a href="#mods">Моды</a></li>
     <li><a href="#gallery">Галерея</a></li>
-    <li><a href="#map">Карта</a></li>
+    <li><a href="#mechanics">Механики</a></li>
+    <li><a href="#discord">Discord</a></li>
     <li><a href="#fame">Слава</a></li>
     <li><a href="#changelog">Новости</a></li>
     <li><a href="#faq">FAQ</a></li>
@@ -661,7 +726,8 @@
   <a href="#download"  onclick="closeMenu()">⬇ Скачать модпак</a>
   <a href="#mods"      onclick="closeMenu()">🧩 Список модов</a>
   <a href="#gallery"   onclick="closeMenu()">📸 Галерея</a>
-  <a href="#map"       onclick="closeMenu()">🗺️ Карта мира</a>
+  <a href="#mechanics" onclick="closeMenu()">⚙️ Механики</a>
+  <a href="#discord"   onclick="closeMenu()">💬 Discord</a>
   <a href="#fame"      onclick="closeMenu()">⭐ Стена Славы</a>
   <a href="#changelog" onclick="closeMenu()">📰 Новости</a>
   <a href="#faq"       onclick="closeMenu()">❓ FAQ</a>
@@ -1141,55 +1207,106 @@
 
 <div class="divider"></div>
 
-<!-- ── Map ───────────────────────────────────────────────────────── -->
-<section id="map">
-  <div class="section-label">Живой мир</div>
-  <h2>Карта <span>сервера</span></h2>
-  <p class="section-desc">Интерактивная карта мира MONREAL в реальном времени — постройки, рельеф, игроки онлайн.</p>
+<!-- ── Mechanics ─────────────────────────────────────────────────── -->
+<section id="mechanics">
+  <div class="section-label">Геймплей</div>
+  <h2>Механики <span>сервера</span></h2>
+  <p class="section-desc">Уникальные фичи которые делают MONREAL особенным — не просто ванилла.</p>
 
-  <div class="map-card">
-    <div class="map-iframe-wrap">
-      <!-- Красивый фон (виден если iframe не грузится из-за HTTPS) -->
-      <div class="map-bg">
-        <div class="map-bg-grid"></div>
-        <div class="map-bg-glow" style="width:500px;height:500px;top:-100px;left:-100px;"></div>
-        <div class="map-bg-glow" style="width:300px;height:300px;bottom:0;right:100px;"></div>
-      </div>
-      <div class="map-overlay"></div>
+  <div class="mechanics-grid">
 
-      <!-- Центральный контент -->
-      <div class="map-center-content">
-        <div class="map-icon">🗺️</div>
-        <h3>Интерактивная карта MONREAL</h3>
-        <p>Живая карта мира с постройками игроков, биомами и онлайн-метками. Открывается в полноэкранном режиме.</p>
-        <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;background:rgba(34,204,102,.08);border:1px solid rgba(34,204,102,.2);font-size:.82rem;color:var(--accent3);font-weight:600;">
-          🔧 &nbsp;Карта в разработке
-        </div>
-        <div class="map-hint">
-          <span>⚡</span>
-          <span>Dynmap установлен · Настройка доступа в процессе</span>
-        </div>
-      </div>
+    <div class="mechanic-card">
+      <span class="mechanic-icon">🔐</span>
+      <div class="mechanic-name">Авторизация</div>
+      <div class="mechanic-desc">Красивый кастомный экран входа при подключении. Регистрация по паролю, защита аккаунта, смена пароля командой. Работает с любым типом аккаунта.</div>
+      <span class="mechanic-tag">КАСТОМНЫЙ МОД</span>
     </div>
 
-    <!-- Статистика под картой -->
-    <div class="map-stats-bar">
-      <div class="map-stat">
-        <div class="map-stat-val">Overworld</div>
-        <div class="map-stat-lbl">Измерение</div>
+    <div class="mechanic-card">
+      <span class="mechanic-icon">🏦</span>
+      <div class="mechanic-name">Банк предметов</div>
+      <div class="mechanic-desc">Продавай ресурсы банку и получай игровые поинты. Цены зависят от редкости предмета — чем ценнее, тем выгоднее. Встроенная экономика без лишних команд.</div>
+      <span class="mechanic-tag">КАСТОМНЫЙ МОД</span>
+    </div>
+
+    <div class="mechanic-card">
+      <span class="mechanic-icon">🎙️</span>
+      <div class="mechanic-name">Голосовой чат</div>
+      <div class="mechanic-desc">Пространственный голосовой чат — слышишь только тех кто рядом. Чем дальше игрок, тем тише его голос. Нажми V для настройки.</div>
+      <span class="mechanic-tag">SIMPLE VOICE CHAT</span>
+    </div>
+
+    <div class="mechanic-card">
+      <span class="mechanic-icon">⛏️</span>
+      <div class="mechanic-name">VeinMiner</div>
+      <div class="mechanic-desc">Зачаруй инструмент на "Vein Miner" и добывай всю жилу руды одним ударом. Держи Ctrl при добыче — мгновенно очищает всю жилу.</div>
+      <span class="mechanic-tag">VEINMINER</span>
+    </div>
+
+    <div class="mechanic-card">
+      <span class="mechanic-icon">🦅</span>
+      <div class="mechanic-name">Элитра в отдельном слоте</div>
+      <div class="mechanic-desc">Элитра надевается в специальный слот — нагрудник остаётся на месте. Летай в полной броне без компромиссов между защитой и полётом.</div>
+      <span class="mechanic-tag">ELYTRA TRINKET</span>
+    </div>
+
+    <div class="mechanic-card">
+      <span class="mechanic-icon">🌙</span>
+      <div class="mechanic-name">Голосование за ночь</div>
+      <div class="mechanic-desc">Не нужно ждать пока все лягут спать — достаточно большинства. Ложись в кровать и ночь пропустится даже если другие игроки не спят.</div>
+      <span class="mechanic-tag">SERVRSLEEP</span>
+    </div>
+
+    <div class="mechanic-card">
+      <span class="mechanic-icon">🪑</span>
+      <div class="mechanic-name">Сидеть на блоках</div>
+      <div class="mechanic-desc">Правый клик по ступеньке или слябу — и твой персонаж сядет. Маленькая деталь которая делает игру живее и уютнее.</div>
+      <span class="mechanic-tag">SIT</span>
+    </div>
+
+    <div class="mechanic-card">
+      <span class="mechanic-icon">💎</span>
+      <div class="mechanic-name">Кастомные узоры</div>
+      <div class="mechanic-desc">Узоры брони теперь на элитре, инструментах, и светятся в темноте. Выгляди уникально — комбинируй узоры и создавай свой стиль.</div>
+      <span class="mechanic-tag">TRIMS</span>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Discord ────────────────────────────────────────────────────── -->
+<section id="discord">
+  <div class="section-label">Сообщество</div>
+  <h2>Discord <span>сервер</span></h2>
+  <p class="section-desc">Общайся с игроками, следи за новостями и участвуй в жизни сервера.</p>
+
+  <div class="discord-wrap">
+    <div class="discord-info">
+      <h3>Присоединяйся к MONREAL</h3>
+      <p>В нашем Discord — новости сервера, обсуждение билдов, анонсы ивентов и просто общение. Заходи, будем рады!</p>
+      <div class="discord-features">
+        <div class="discord-feature"><span>📢</span><span>Анонсы обновлений и ивентов</span></div>
+        <div class="discord-feature"><span>🏗️</span><span>Скриншоты построек и достижений</span></div>
+        <div class="discord-feature"><span>💬</span><span>Общий чат и голосовые каналы</span></div>
+        <div class="discord-feature"><span>🛠️</span><span>Поддержка и помощь новичкам</span></div>
+        <div class="discord-feature"><span>🎉</span><span>Анонсы ивентов и конкурсов</span></div>
       </div>
-      <div class="map-stat">
-        <div class="map-stat-val" id="mapOnline">—</div>
-        <div class="map-stat-lbl">Игроков онлайн</div>
-      </div>
-      <div class="map-stat">
-        <div class="map-stat-val">Dynmap</div>
-        <div class="map-stat-lbl">Движок карты</div>
-      </div>
-      <div class="map-stat">
-        <div class="map-stat-val">Live</div>
-        <div class="map-stat-lbl">Обновление</div>
-      </div>
+      <a href="https://discord.gg/RuScQn7d" target="_blank" rel="noopener" class="discord-btn" id="discordBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.054a19.97 19.97 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        Войти в Discord
+      </a>
+    </div>
+
+    <div class="discord-widget-wrap">
+      <iframe id="discordWidget"
+        src="https://discord.com/widget?id=1489377834991354016&theme=dark"
+        width="340" height="500"
+        allowtransparency="true"
+        frameborder="0"
+        sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+      </iframe>
     </div>
   </div>
 </section>
