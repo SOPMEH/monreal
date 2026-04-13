@@ -350,15 +350,6 @@
       box-shadow: 0 0 10px rgba(34,204,102,.7), 0 0 20px rgba(34,204,102,.3);
     }
 
-    /* ── Cursor glow ── */
-    #cursor-glow {
-      position: fixed; pointer-events: none; z-index: 0;
-      width: 380px; height: 380px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(26,122,60,.07) 0%, transparent 70%);
-      transform: translate(-50%, -50%);
-      transition: left .25s ease, top .25s ease;
-      will-change: left, top;
-    }
 
     /* ── Vine canvases ── */
     .vine-canvas {
@@ -969,7 +960,6 @@
 <body>
 
 <div id="scroll-progress"></div>
-<div id="cursor-glow"></div>
 <div class="aurora"><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div></div>
 <div class="noise-overlay"></div>
 <canvas class="vine-canvas" id="vineLeft"></canvas>
@@ -1867,12 +1857,6 @@
     document.querySelector('nav').classList.toggle('scrolled', h.scrollTop > 10);
   }, { passive: true });
 
-  /* ── Cursor glow ── */
-  const cursorGlow = document.getElementById('cursor-glow');
-  document.addEventListener('mousemove', e => {
-    cursorGlow.style.left = e.clientX + 'px';
-    cursorGlow.style.top  = e.clientY + 'px';
-  }, { passive: true });
 
   const SERVER_IP = 'epyc2.worldhosts.fun:26163';
   const LAUNCH_DATE = new Date('2026-02-14');
