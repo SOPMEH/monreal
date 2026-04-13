@@ -2415,26 +2415,11 @@
     io.observe(el);
   });
 
-  /* ── Parallax 1: hero background (aurora) ── */
+  /* ── Parallax: карточки (внутри каждой карточки элемент сдвигается) ── */
   (function() {
-    const aurora = document.querySelector('.aurora');
-    const particles = document.getElementById('particles');
-    if (!aurora) return;
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      aurora.style.transform    = `translateY(${y * 0.35}px)`;
-      if (particles) particles.style.transform = `translateY(${y * 0.15}px)`;
-    }, { passive: true });
-  })();
-
-  /* ── Parallax 2: карточки (внутри каждой карточки фоновый слой сдвигается) ── */
-  (function() {
-    // Для каждой карточки считаем её позицию относительно viewport при скролле
-    // и сдвигаем её декоративный псевдоэлемент / иконку / аватар
     const cards = [
-      // [селектор контейнера, селектор внутреннего элемента, скорость]
-      { wrap: '.fame-card',     inner: '.fame-avatar-wrap', speed: 0.08 },
-      { wrap: '.mechanic-card', inner: '.mechanic-icon',    speed: 0.10 },
+      { wrap: '.fame-card',     inner: '.fame-avatar-wrap', speed: 0.025 },
+      { wrap: '.mechanic-card', inner: '.mechanic-icon',    speed: 0.022 },
       { wrap: '.step-card',     inner: '.step-num',         speed: 0.06 },
       { wrap: '.timeline-item', inner: '.timeline-date',    speed: 0.07 },
     ];
