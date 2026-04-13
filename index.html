@@ -204,7 +204,7 @@
     .mod-info { flex:1; min-width:0; }
     .mod-name { font-size: .88rem; font-weight: 700; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .mod-desc { font-size: .76rem; color: var(--text2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .mod-tags { display: flex; gap: 5px; margin-top: 9px; flex-wrap: wrap; }
+    .mod-tags { display: flex; gap: 5px; margin-top: 9px; flex-wrap: wrap; align-items: center; }
     .tag { font-size: .66rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; letter-spacing: .04em; }
     .tag-perf   { background: rgba(34,204,102,.12); color: #44EE88; }
     .tag-world  { background: rgba(34,85,204,.15);  color: var(--accent3); }
@@ -218,6 +218,21 @@
       font-size: .62rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
       background: rgba(34,85,204,.2); color: var(--accent3); border: 1px solid rgba(34,85,204,.3); letter-spacing: .06em;
     }
+
+    /* ── Mod links ── */
+    .mod-link {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: .65rem; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+      text-decoration: none; transition: all .2s; letter-spacing: .03em;
+    }
+    .mod-link-modrinth {
+      background: rgba(27,217,106,.1); color: #3FCC77; border: 1px solid rgba(27,217,106,.2);
+    }
+    .mod-link-modrinth:hover { background: rgba(27,217,106,.2); border-color: #3FCC77; }
+    .mod-link-github {
+      background: rgba(255,255,255,.05); color: var(--gold3); border: 1px solid rgba(204,168,32,.2);
+    }
+    .mod-link-github:hover { background: rgba(204,168,32,.12); border-color: var(--gold); color: var(--gold2); }
 
     /* ── IP banner ── */
     .ip-banner {
@@ -247,13 +262,6 @@
 
     footer { padding: 36px 48px; text-align: center; color: var(--text3); font-size: .78rem; border-top: 1px solid var(--border); max-width: 1200px; margin: 36px auto 0; }
     footer strong { color: var(--gold); }
-
-    /* ── Warning banner ── */
-    .warn-banner {
-      background: rgba(204,168,32,.07); border: 1px solid rgba(204,168,32,.2);
-      border-radius: 10px; padding: 12px 18px; font-size: .82rem; color: var(--gold3);
-      display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
-    }
 
     @media (max-width: 768px) {
       nav { padding: 0 20px; }
@@ -289,7 +297,7 @@
   <h1>MONREAL</h1>
   <p class="hero-sub">Кастомный ванильный сервер с экономикой, голосовым чатом и уникальными механиками</p>
   <div class="hero-actions">
-    <a href="#download" class="btn btn-gold">⬇&nbsp; Скачать модпак</a>
+    <a href="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/MONREAL%20(E)%201.0.0.mrpack" class="btn btn-gold">⬇&nbsp; Скачать модпак</a>
     <a href="#connect" class="btn btn-outline">Подключиться</a>
   </div>
   <div class="hero-stats">
@@ -323,7 +331,8 @@
       </div>
     </div>
     <div class="download-actions">
-      <a href="MONREAL (E) 1.0.0.mrpack" download class="btn btn-gold" style="justify-content:center;">
+      <a href="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/MONREAL%20(E)%201.0.0.mrpack"
+         class="btn btn-gold" style="justify-content:center;" target="_blank" rel="noopener">
         ⬇&nbsp; Скачать .mrpack
       </a>
       <a href="#mods" class="btn btn-outline" style="justify-content:center;font-size:.82rem;">
@@ -369,7 +378,7 @@
     <button class="filter-btn" onclick="filterMods('required',this)">Обязательные</button>
     <button class="filter-btn" onclick="filterMods('perf',this)">Производительность</button>
     <button class="filter-btn" onclick="filterMods('visual',this)">Визуал</button>
-    <button class="filter-btn" onclick="filterMods('world',this)">Мир и моby</button>
+    <button class="filter-btn" onclick="filterMods('world',this)">Мир и мобы</button>
     <button class="filter-btn" onclick="filterMods('qol',this)">QoL</button>
     <button class="filter-btn" onclick="filterMods('social',this)">Социальные</button>
     <button class="filter-btn" onclick="filterMods('custom',this)">Кастомные</button>
@@ -378,7 +387,7 @@
   <div class="mods-grid" id="modsGrid">
 
     <!-- КАСТОМНЫЕ -->
-    <div class="mod-card" data-tags="required,custom">
+    <div class="mod-card" data-tags="required,custom" data-url="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-auth-1.0.0.jar" data-link-type="github">
       <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>
       <div class="mod-icon">🔐</div>
       <div class="mod-info">
@@ -388,8 +397,8 @@
       </div>
     </div>
 
-    <!-- ОБЯЗАТЕЛЬНЫЕ / БЕЗ КАТЕГОРИИ -->
-    <div class="mod-card" data-tags="required">
+    <!-- ОБЯЗАТЕЛЬНЫЕ -->
+    <div class="mod-card" data-tags="required" data-url="https://modrinth.com/mod/fabric-api">
       <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>
       <div class="mod-icon">⚙️</div>
       <div class="mod-info">
@@ -399,7 +408,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="required,social">
+    <div class="mod-card" data-tags="required,social" data-url="https://modrinth.com/mod/simple-voice-chat">
       <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>
       <div class="mod-icon">🎙️</div>
       <div class="mod-info">
@@ -410,7 +419,7 @@
     </div>
 
     <!-- ПРОИЗВОДИТЕЛЬНОСТЬ -->
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/sodium">
       <div class="mod-icon">🚀</div>
       <div class="mod-info">
         <div class="mod-name">Sodium</div>
@@ -419,7 +428,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/sodium-extra">
       <div class="mod-icon">➕</div>
       <div class="mod-info">
         <div class="mod-name">Sodium Extra</div>
@@ -428,7 +437,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/immediatelyfast">
       <div class="mod-icon">⚡</div>
       <div class="mod-info">
         <div class="mod-name">ImmediatelyFast</div>
@@ -437,7 +446,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/ferrite-core">
       <div class="mod-icon">🧠</div>
       <div class="mod-info">
         <div class="mod-name">FerriteCore</div>
@@ -446,7 +455,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/krypton">
       <div class="mod-icon">🌐</div>
       <div class="mod-info">
         <div class="mod-name">Krypton</div>
@@ -455,7 +464,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/entityculling">
       <div class="mod-icon">👁️</div>
       <div class="mod-info">
         <div class="mod-name">Entity Culling</div>
@@ -464,7 +473,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/dynamic-fps">
       <div class="mod-icon">🔋</div>
       <div class="mod-info">
         <div class="mod-name">Dynamic FPS</div>
@@ -473,7 +482,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/badoptimizations">
       <div class="mod-icon">✨</div>
       <div class="mod-info">
         <div class="mod-name">BadOptimizations</div>
@@ -482,7 +491,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="perf">
+    <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/clumps">
       <div class="mod-icon">🔮</div>
       <div class="mod-info">
         <div class="mod-name">Clumps</div>
@@ -492,7 +501,7 @@
     </div>
 
     <!-- ВИЗУАЛ -->
-    <div class="mod-card" data-tags="visual">
+    <div class="mod-card" data-tags="visual" data-url="https://modrinth.com/mod/iris">
       <div class="mod-icon">🌅</div>
       <div class="mod-info">
         <div class="mod-name">Iris Shaders</div>
@@ -501,7 +510,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="visual">
+    <div class="mod-card" data-tags="visual" data-url="https://modrinth.com/mod/lambdynamiclights">
       <div class="mod-icon">💡</div>
       <div class="mod-info">
         <div class="mod-name">LambDynamicLights</div>
@@ -510,7 +519,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="visual">
+    <div class="mod-card" data-tags="visual" data-url="https://modrinth.com/mod/entity-model-features">
       <div class="mod-icon">🎭</div>
       <div class="mod-info">
         <div class="mod-name">Entity Model Features</div>
@@ -519,7 +528,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="visual">
+    <div class="mod-card" data-tags="visual" data-url="https://modrinth.com/mod/entitytexturefeatures">
       <div class="mod-icon">🎨</div>
       <div class="mod-info">
         <div class="mod-name">Entity Texture Features</div>
@@ -528,7 +537,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="visual,qol">
+    <div class="mod-card" data-tags="visual,qol" data-url="https://modrinth.com/mod/elytra-trims">
       <div class="mod-icon">🦅</div>
       <div class="mod-info">
         <div class="mod-name">Elytra Trims</div>
@@ -537,7 +546,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="visual">
+    <div class="mod-card" data-tags="visual" data-url="https://modrinth.com/mod/glow-trims">
       <div class="mod-icon">✨</div>
       <div class="mod-info">
         <div class="mod-name">Glow Trims</div>
@@ -546,7 +555,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="visual">
+    <div class="mod-card" data-tags="visual" data-url="https://modrinth.com/mod/tool-trims">
       <div class="mod-icon">🔨</div>
       <div class="mod-info">
         <div class="mod-name">Tool Trims</div>
@@ -556,7 +565,7 @@
     </div>
 
     <!-- МИР -->
-    <div class="mod-card" data-tags="world">
+    <div class="mod-card" data-tags="world" data-url="https://modrinth.com/mod/dungeons-and-taverns">
       <div class="mod-icon">🏰</div>
       <div class="mod-info">
         <div class="mod-name">Dungeons and Taverns</div>
@@ -565,7 +574,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="world">
+    <div class="mod-card" data-tags="world" data-url="https://modrinth.com/mod/stronghold-overhaul">
       <div class="mod-icon">🏚️</div>
       <div class="mod-info">
         <div class="mod-name">Stronghold Overhaul</div>
@@ -574,7 +583,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="world">
+    <div class="mod-card" data-tags="world" data-url="https://modrinth.com/mod/better-vanilla-mobs">
       <div class="mod-icon">🦁</div>
       <div class="mod-info">
         <div class="mod-name">Better Vanilla Mobs</div>
@@ -583,7 +592,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="world">
+    <div class="mod-card" data-tags="world" data-url="https://modrinth.com/mod/more-mobs">
       <div class="mod-icon">🐾</div>
       <div class="mod-info">
         <div class="mod-name">More Mobs</div>
@@ -592,7 +601,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="world">
+    <div class="mod-card" data-tags="world" data-url="https://modrinth.com/mod/true-ending">
       <div class="mod-icon">🌑</div>
       <div class="mod-info">
         <div class="mod-name">True Ending</div>
@@ -601,7 +610,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="world">
+    <div class="mod-card" data-tags="world" data-url="https://modrinth.com/mod/better-maces">
       <div class="mod-icon">🔱</div>
       <div class="mod-info">
         <div class="mod-name">Better Maces</div>
@@ -611,7 +620,7 @@
     </div>
 
     <!-- QOL -->
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/veinminer">
       <div class="mod-icon">⛏️</div>
       <div class="mod-info">
         <div class="mod-name">VeinMiner</div>
@@ -620,7 +629,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/sit">
       <div class="mod-icon">🪑</div>
       <div class="mod-info">
         <div class="mod-name">Sit</div>
@@ -629,7 +638,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/appleskin">
       <div class="mod-icon">🍎</div>
       <div class="mod-info">
         <div class="mod-name">AppleSkin</div>
@@ -638,7 +647,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/craftable-name-tags">
       <div class="mod-icon">🏷️</div>
       <div class="mod-info">
         <div class="mod-name">Craftable Nametag</div>
@@ -647,7 +656,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/players-drop-heads">
       <div class="mod-icon">💀</div>
       <div class="mod-info">
         <div class="mod-name">Players Drop Heads</div>
@@ -656,7 +665,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/servrsleep">
       <div class="mod-icon">🌙</div>
       <div class="mod-info">
         <div class="mod-name">ServrSleep</div>
@@ -665,7 +674,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/elytra-trinket">
       <div class="mod-icon">🦅</div>
       <div class="mod-info">
         <div class="mod-name">Elytra Trinket</div>
@@ -674,7 +683,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/mouse-tweaks">
       <div class="mod-icon">🖱️</div>
       <div class="mod-info">
         <div class="mod-name">Mouse Tweaks</div>
@@ -683,7 +692,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/fuel-info">
       <div class="mod-icon">🔥</div>
       <div class="mod-info">
         <div class="mod-name">Fuel Info</div>
@@ -692,7 +701,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol,visual">
+    <div class="mod-card" data-tags="qol,visual" data-url="https://modrinth.com/mod/immersive-hotbar">
       <div class="mod-icon">🎒</div>
       <div class="mod-info">
         <div class="mod-name">Immersive Hotbar</div>
@@ -701,7 +710,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="qol">
+    <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/day-counter">
       <div class="mod-icon">📅</div>
       <div class="mod-info">
         <div class="mod-name">Day Counter</div>
@@ -711,7 +720,7 @@
     </div>
 
     <!-- СОЦИАЛЬНЫЕ -->
-    <div class="mod-card" data-tags="social">
+    <div class="mod-card" data-tags="social" data-url="https://modrinth.com/mod/chat-heads">
       <div class="mod-icon">💬</div>
       <div class="mod-info">
         <div class="mod-name">Chat Heads</div>
@@ -720,7 +729,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="social">
+    <div class="mod-card" data-tags="social" data-url="https://modrinth.com/mod/skinsrestorer">
       <div class="mod-icon">🎨</div>
       <div class="mod-info">
         <div class="mod-name">SkinsRestorer</div>
@@ -729,7 +738,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="social,visual">
+    <div class="mod-card" data-tags="social,visual" data-url="https://modrinth.com/mod/melody">
       <div class="mod-icon">🎵</div>
       <div class="mod-info">
         <div class="mod-name">Melody</div>
@@ -738,7 +747,7 @@
       </div>
     </div>
 
-    <div class="mod-card" data-tags="social,visual">
+    <div class="mod-card" data-tags="social,visual" data-url="https://modrinth.com/mod/fancy-toasts">
       <div class="mod-icon">🔔</div>
       <div class="mod-info">
         <div class="mod-name">Fancy Toasts</div>
@@ -804,6 +813,22 @@
       card.style.display = (tag === 'all' || tags.includes(tag)) ? '' : 'none';
     });
   }
+
+  // Добавляем кнопки-ссылки к каждому моду
+  document.querySelectorAll('.mod-card[data-url]').forEach(card => {
+    const url = card.dataset.url;
+    const isGithub = card.dataset.linkType === 'github';
+    const tagsEl = card.querySelector('.mod-tags');
+    if (tagsEl) {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = isGithub ? 'mod-link mod-link-github' : 'mod-link mod-link-modrinth';
+      link.innerHTML = isGithub ? '⬇ GitHub' : '↗ Modrinth';
+      tagsEl.appendChild(link);
+    }
+  });
 
   // Анимация при скролле
   const io = new IntersectionObserver((entries) => {
