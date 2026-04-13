@@ -360,18 +360,68 @@
     .typing-cursor { display:inline-block; width:2px; height:1em; background:var(--gold3); margin-left:2px; vertical-align:middle; animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
+    /* ── Liquid Glass ── */
+    .glass {
+      background: rgba(10,22,12,.45) !important;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-color: rgba(34,204,102,.12) !important;
+    }
+    .glass-strong {
+      background: rgba(10,22,12,.6) !important;
+      backdrop-filter: blur(32px) saturate(200%) brightness(1.05);
+      -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(1.05);
+      border-color: rgba(34,204,102,.15) !important;
+    }
+    /* Shine overlay on glass cards */
+    .glass::after, .glass-strong::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(135deg, rgba(255,255,255,.04) 0%, transparent 50%, rgba(34,204,102,.02) 100%);
+      border-radius: inherit;
+    }
+
+    /* ── MONREAL title — letter animation ── */
+    .hero-title-wrap { position: relative; z-index: 1; margin-bottom: 6px; }
+    .hero-letter {
+      display: inline-block;
+      background: linear-gradient(140deg, var(--gold2) 0%, var(--gold) 35%, var(--gold3) 65%, #11AA44 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      font-size: clamp(4.5rem,13vw,9rem); font-weight: 900; letter-spacing: .14em; line-height: 1;
+      opacity: 0; transform: translateY(40px) scale(.8);
+      filter: blur(12px) drop-shadow(0 0 40px rgba(34,204,102,.4));
+      animation: letterIn .7s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    @keyframes letterIn {
+      to { opacity:1; transform:translateY(0) scale(1); filter: blur(0px) drop-shadow(0 0 40px rgba(34,204,102,.35)); }
+    }
+    /* Wave float after reveal */
+    .hero-letter.revealed {
+      animation: letterWave 3.5s ease-in-out infinite;
+    }
+    @keyframes letterWave {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    /* Scan light across title */
+    .hero-title-wrap::after {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(68,255,136,.12), transparent);
+      animation: scanLight 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes scanLight {
+      0%   { left: -60%; }
+      100% { left: 160%; }
+    }
+
     /* ── Enhanced animations ── */
     @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
     @keyframes glowPulse { 0%,100%{filter:drop-shadow(0 0 8px rgba(34,204,102,.3))} 50%{filter:drop-shadow(0 0 20px rgba(34,204,102,.6))} }
     @keyframes shimmer {
-      0%{background-position:200% center}
-      100%{background-position:-200% center}
-    }
-
-    /* Hero title shimmer */
-    h1 {
-      background-size: 200% auto !important;
-      animation: shimmer 4s linear infinite;
+      0%  { background-position: 200% center; }
+      100%{ background-position: -200% center; }
     }
 
     /* Floating hero badge */
@@ -847,13 +897,13 @@
   <div class="hero-badge">
     Fabric &nbsp;<span>1.21.11</span>&nbsp; · &nbsp;Vanilla+
   </div>
-  <h1>MONREAL</h1>
+  <div class="hero-title-wrap" id="heroTitle"></div>
   <p class="hero-sub">Кастомный ванильный сервер с экономикой, голосовым чатом и уникальными механиками</p>
   <div class="hero-actions">
     <a href="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-1.0.0.mrpack" class="btn btn-gold">⬇&nbsp; Скачать модпак</a>
     <a href="#connect" class="btn btn-outline">Подключиться</a>
   </div>
-  <div class="hero-stats">
+  <div class="hero-stats glass">
     <div class="stat"><div class="stat-value">1.21</div><div class="stat-label">Версия</div></div>
     <div class="stat-sep"></div>
     <div class="stat"><div class="stat-value">50+</div><div class="stat-label">Модов</div></div>
@@ -872,7 +922,7 @@
   <h2>Скачай <span>модпак</span></h2>
   <p class="section-desc">Все нужные моды в одном файле. Импортируй в Modrinth App — и готово.</p>
 
-  <div class="download-hero">
+  <div class="download-hero glass-strong">
     <div class="download-text">
       <h3>MONREAL (E) 1.0.0</h3>
       <p>Полная сборка модов для игры на сервере. Fabric 1.21.11, все обязательные и рекомендуемые моды включены.</p>
@@ -1629,7 +1679,7 @@
   <h2>Зайти на <span>сервер</span></h2>
   <p class="section-desc">Установи модпак и добавь сервер по адресу ниже.</p>
 
-  <div class="ip-banner">
+  <div class="ip-banner glass">
     <div class="ip-left">
       <h3>Адрес сервера</h3>
       <p>Minecraft 1.21.11 · Fabric · Требуется авторизация при первом входе</p>
@@ -1853,6 +1903,29 @@
       requestAnimationFrame(draw);
     }
     draw();
+  })();
+
+  /* ── MONREAL letter animation ── */
+  (function() {
+    const wrap = document.getElementById('heroTitle');
+    if (!wrap) return;
+    const word = 'MONREAL';
+    const letters = [];
+    word.split('').forEach((ch, i) => {
+      const span = document.createElement('span');
+      span.className = 'hero-letter';
+      span.textContent = ch;
+      span.style.animationDelay = (i * 90) + 'ms';
+      wrap.appendChild(span);
+      letters.push(span);
+    });
+    // После появления — запускаем волну с разными задержками
+    setTimeout(() => {
+      letters.forEach((s, i) => {
+        s.classList.add('revealed');
+        s.style.animationDelay = (i * 120) + 'ms';
+      });
+    }, word.length * 90 + 800);
   })();
 
   /* ── Typing effect ── */
