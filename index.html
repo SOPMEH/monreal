@@ -2047,11 +2047,11 @@
       wrap.appendChild(span);
       letters.push(span);
     });
-    // После появления — запускаем волну с разными задержками
+    // После появления — все буквы левитируют синхронно
     setTimeout(() => {
-      letters.forEach((s, i) => {
+      letters.forEach((s) => {
+        s.style.animationDelay = '0ms';
         s.classList.add('revealed');
-        s.style.animationDelay = (i * 120) + 'ms';
       });
     }, word.length * 90 + 800);
   })();
