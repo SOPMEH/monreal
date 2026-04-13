@@ -491,6 +491,16 @@
 
     /* ── MONREAL title — letter animation ── */
     .hero-title-wrap { position: relative; z-index: 1; margin-bottom: 6px; }
+    /* Outer: левитирует сразу, независимо от fly-in */
+    .hero-letter-outer {
+      display: inline-block;
+      animation: letterWave 3.5s ease-in-out infinite;
+    }
+    @keyframes letterWave {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    /* Inner: fly-in появление */
     .hero-letter {
       display: inline-block;
       background: linear-gradient(140deg, var(--gold2) 0%, var(--gold) 35%, var(--gold3) 65%, #11AA44 100%);
@@ -501,17 +511,7 @@
       animation: letterIn .7s cubic-bezier(.16,1,.3,1) forwards;
     }
     @keyframes letterIn {
-      to { opacity:1; transform:translateY(0) scale(1); filter: blur(0px) drop-shadow(0 0 40px rgba(34,204,102,.35)); }
-    }
-    /* Revealed state — smooth levitation */
-    .hero-letter.revealed {
-      opacity: 1 !important;
-      filter: drop-shadow(0 0 30px rgba(34,204,102,.35)) !important;
-      animation: letterWave 3.5s ease-in-out infinite;
-    }
-    @keyframes letterWave {
-      0%,100% { transform: translateY(0) scale(1); }
-      50%      { transform: translateY(-7px) scale(1); }
+      to { opacity:1; transform:translateY(0) scale(1); filter: blur(0px) drop-shadow(0 0 30px rgba(34,204,102,.35)); }
     }
 
     /* ── Enhanced animations ── */
@@ -2038,22 +2038,21 @@
     const wrap = document.getElementById('heroTitle');
     if (!wrap) return;
     const word = 'MONREAL';
-    const letters = [];
+    // Внешний span левитирует сразу (отриц. delay = своя фаза волны)
+    // Внутренний span делает fly-in появление со стаггером
     word.split('').forEach((ch, i) => {
-      const span = document.createElement('span');
-      span.className = 'hero-letter';
-      span.textContent = ch;
-      span.style.animationDelay = (i * 90) + 'ms';
-      wrap.appendChild(span);
-      letters.push(span);
+      const outer = document.createElement('span');
+      outer.className = 'hero-letter-outer';
+      outer.style.animationDelay = -(i * 500) + 'ms';
+
+      const inner = document.createElement('span');
+      inner.className = 'hero-letter';
+      inner.textContent = ch;
+      inner.style.animationDelay = (i * 90) + 'ms';
+
+      outer.appendChild(inner);
+      wrap.appendChild(outer);
     });
-    // После появления — каждая буква левитирует в своей фазе (отриц. delay = старт сразу)
-    setTimeout(() => {
-      letters.forEach((s, i) => {
-        s.style.animationDelay = -(i * 500) + 'ms';
-        s.classList.add('revealed');
-      });
-    }, word.length * 90 + 800);
   })();
 
   /* ── Typing effect ── */
