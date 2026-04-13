@@ -250,15 +250,6 @@
     [data-theme="sculk"] .fame-badge-gold   { background: rgba(80,0,200,.12);  color: #AA88FF; border-color: rgba(80,0,200,.25); }
 
     /* Sculk-специфичный Warden eye — мигает в hero раз в ~7 сек */
-    [data-theme="sculk"] .hero::after {
-      content: '👁';
-      position: absolute; bottom: 18%; left: 50%; transform: translateX(-50%);
-      font-size: 1.4rem;
-      filter: drop-shadow(0 0 12px rgba(0,220,240,.9)) drop-shadow(0 0 30px rgba(0,220,240,.4));
-      animation: wardenEye 7s ease-in-out infinite;
-      pointer-events: none; z-index: 1;
-    }
-
     /* Soul fire по бокам hero */
     [data-theme="sculk"] .hero::before {
       background:
@@ -296,6 +287,30 @@
       text-decoration: none; transition: all .2s; cursor: pointer;
     }
     .share-tg:hover { background: rgba(0,136,204,.22); border-color: rgba(0,136,204,.5); color: #90D0FF; }
+
+    /* ── Плавная смена темы ── */
+    html {
+      transition:
+        background-color .7s ease,
+        color .7s ease;
+    }
+    body, nav, .mod-card, .mechanic-card, .step-card, .fame-card,
+    .faq-item, .timeline-item, .download-hero, .ip-banner, .gallery-item,
+    .btn, .btn-gold, .btn-outline, .filter-btn, .nav-ip, #scrollTop,
+    .hero-stats, .mobile-menu, footer {
+      transition:
+        background-color .7s ease,
+        border-color .7s ease,
+        color .7s ease,
+        box-shadow .7s ease !important;
+    }
+    /* Overlay-вспышка при смене темы */
+    #theme-flash {
+      position: fixed; inset: 0; z-index: 9998;
+      pointer-events: none; opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #theme-flash.flash { opacity: 1; }
 
     html { scroll-behavior: smooth; }
     body {
@@ -1410,6 +1425,7 @@
 </div>
 
 <div id="scroll-progress"></div>
+<div id="theme-flash"></div>
 <div class="aurora"><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div></div>
 <div class="noise-overlay"></div>
 <canvas class="vine-canvas" id="vineLeft"></canvas>
@@ -2335,28 +2351,45 @@
 
   /* ── Theme toggle ── */
   (function() {
-    const saved = localStorage.getItem('monreal-theme') || 'forest';
-    applyTheme(saved);
+    const flash = document.getElementById('theme-flash');
 
-    function applyTheme(theme) {
+    function applyTheme(theme, animate) {
       const btn   = document.getElementById('themeToggle');
       const label = document.getElementById('themeLabel');
       const icon  = btn?.querySelector('.theme-icon');
-      if (theme === 'sculk') {
-        document.documentElement.setAttribute('data-theme', 'sculk');
-        if (label) label.textContent = 'Скалк';
-        if (icon)  icon.textContent  = '🔵';
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-        if (label) label.textContent = 'Лес';
-        if (icon)  icon.textContent  = '🌿';
+      const isSculk = theme === 'sculk';
+
+      function commit() {
+        if (isSculk) {
+          document.documentElement.setAttribute('data-theme', 'sculk');
+          if (flash) flash.style.background = 'rgba(0,180,220,.18)';
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          if (flash) flash.style.background = 'rgba(20,100,40,.18)';
+        }
+        if (label) label.textContent = isSculk ? 'Скалк' : 'Лес';
+        if (icon)  icon.textContent  = isSculk ? '🔵' : '🌿';
+        localStorage.setItem('monreal-theme', theme);
       }
-      localStorage.setItem('monreal-theme', theme);
+
+      if (animate && flash) {
+        // вспышка → меняем тему → затухание
+        flash.classList.add('flash');
+        setTimeout(() => {
+          commit();
+          flash.classList.remove('flash');
+        }, 220);
+      } else {
+        commit();
+      }
     }
+
+    const saved = localStorage.getItem('monreal-theme') || 'forest';
+    applyTheme(saved, false);
 
     window.toggleTheme = function() {
       const cur = localStorage.getItem('monreal-theme') || 'forest';
-      applyTheme(cur === 'sculk' ? 'forest' : 'sculk');
+      applyTheme(cur === 'sculk' ? 'forest' : 'sculk', true);
     };
   })();
 
