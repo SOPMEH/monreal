@@ -2420,19 +2420,19 @@
     // Каждый элемент двигается со своей скоростью относительно своей секции
     // speed > 0 = медленнее скролла (фон), speed < 0 = быстрее (передний план)
     const items = [
-      // Aurora blobs — самый дальний слой, едва движется
-      { sel: '.aurora-blob:nth-child(1)', speed: 0.06 },
-      { sel: '.aurora-blob:nth-child(2)', speed: 0.04 },
-      { sel: '.aurora-blob:nth-child(3)', speed: 0.07 },
-      { sel: '.aurora-blob:nth-child(4)', speed: 0.03 },
+      // Aurora blobs — самый дальний слой
+      { sel: '.aurora-blob:nth-child(1)', speed: 0.18 },
+      { sel: '.aurora-blob:nth-child(2)', speed: 0.12 },
+      { sel: '.aurora-blob:nth-child(3)', speed: 0.22 },
+      { sel: '.aurora-blob:nth-child(4)', speed: 0.09 },
       // Иконки механик — средний план
-      { sel: '.mechanic-icon',   speed: -0.04, perEl: true },
+      { sel: '.mechanic-icon',    speed: -0.12, perEl: true },
       // Иконки модов — чуть спереди
-      { sel: '.mod-icon',        speed: -0.03, perEl: true },
+      { sel: '.mod-icon',         speed: -0.09, perEl: true },
       // Аватары в зале славы — передний план
-      { sel: '.fame-avatar-wrap', speed: -0.05, perEl: true },
+      { sel: '.fame-avatar-wrap', speed: -0.16, perEl: true },
       // Section labels — дальний фон
-      { sel: '.section-label',   speed: 0.035, perEl: true },
+      { sel: '.section-label',    speed: 0.10, perEl: true },
     ];
 
     const els = items.flatMap(item => {
