@@ -335,12 +335,115 @@
     .fame-badge-purple { background: rgba(136,102,255,.12);color: #AA88FF; border: 1px solid rgba(136,102,255,.2); }
     .fame-badge-blue   { background: rgba(68,120,255,.1);  color: #88AAFF; border: 1px solid rgba(68,120,255,.2); }
 
+    /* ── Scroll progress bar (YouTube style) ── */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 2px; z-index: 1001;
+      width: 0%; transition: width .08s linear;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent3) 50%, var(--gold2) 100%);
+      box-shadow: 0 0 10px rgba(34,204,102,.7), 0 0 20px rgba(34,204,102,.3);
+    }
+
+    /* ── Cursor glow ── */
+    #cursor-glow {
+      position: fixed; pointer-events: none; z-index: 0;
+      width: 380px; height: 380px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,122,60,.07) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: left .25s ease, top .25s ease;
+      will-change: left, top;
+    }
+
     /* ── Particles canvas ── */
     #particles { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; display:block; }
 
     /* ── Typing cursor ── */
     .typing-cursor { display:inline-block; width:2px; height:1em; background:var(--gold3); margin-left:2px; vertical-align:middle; animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Enhanced animations ── */
+    @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes glowPulse { 0%,100%{filter:drop-shadow(0 0 8px rgba(34,204,102,.3))} 50%{filter:drop-shadow(0 0 20px rgba(34,204,102,.6))} }
+    @keyframes shimmer {
+      0%{background-position:200% center}
+      100%{background-position:-200% center}
+    }
+
+    /* Hero title shimmer */
+    h1 {
+      background-size: 200% auto !important;
+      animation: shimmer 4s linear infinite;
+    }
+
+    /* Floating hero badge */
+    .hero-badge { animation: floatY 3s ease-in-out infinite; }
+
+    /* Glow on section labels */
+    .section-label { animation: glowPulse 3s ease-in-out infinite; }
+
+    /* Nav glow on scroll */
+    nav.scrolled {
+      background: rgba(3,8,5,0.97) !important;
+      box-shadow: 0 1px 0 var(--border), 0 4px 30px rgba(0,0,0,.4);
+    }
+
+    /* Card 3D tilt — applied via JS */
+    .tilt-card { transform-style: preserve-3d; will-change: transform; }
+
+    /* Stat counter animation */
+    .stat-value { transition: color .3s; }
+
+    /* Smooth section reveal — override old */
+    .reveal-up {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* Fame card glow on hover */
+    .fame-card:hover { box-shadow: 0 14px 44px rgba(34,204,102,.12) !important; }
+    .fame-card.first-place:hover { box-shadow: 0 14px 44px rgba(34,204,102,.22) !important; }
+
+    /* Mechanic card icon float */
+    .mechanic-card:hover .mechanic-icon { animation: floatY 1.5s ease-in-out infinite; }
+
+    /* Download button pulse */
+    .btn-gold { animation: glowPulse 3s ease-in-out infinite; }
+
+    /* Divider glow */
+    .divider { position: relative; overflow: visible; }
+    .divider::after {
+      content: ''; position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+      width: 120px; height: 1px;
+      background: var(--accent3);
+      box-shadow: 0 0 12px var(--accent3);
+      border-radius: 1px;
+    }
+
+    /* IP addr glow */
+    .ip-addr { text-shadow: 0 0 20px rgba(34,204,102,.3); }
+
+    /* Gallery item shimmer border on hover */
+    .gallery-item:hover {
+      border-color: rgba(34,204,102,.35) !important;
+      box-shadow: 0 8px 32px rgba(34,204,102,.1);
+    }
+
+    /* Step card accent line */
+    .step-card:hover { border-color: rgba(34,204,102,.3) !important; box-shadow: 0 6px 24px rgba(34,204,102,.08); }
+
+    /* Scroll-to-top button */
+    #scrollTop {
+      position: fixed; bottom: 28px; right: 28px; z-index: 500;
+      width: 42px; height: 42px; border-radius: 10px;
+      background: var(--card2); border: 1px solid var(--border2);
+      color: var(--text2); font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateY(16px);
+      transition: all .3s cubic-bezier(.16,1,.3,1);
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+    #scrollTop.show { opacity: 1; transform: translateY(0); }
+    #scrollTop:hover { background: var(--accent); border-color: var(--accent3); color: #fff; box-shadow: 0 4px 20px rgba(34,204,102,.3); transform: translateY(-2px); }
 
     /* ── Mechanics ── */
     .mechanics-grid {
@@ -697,6 +800,10 @@
   </style>
 </head>
 <body>
+
+<div id="scroll-progress"></div>
+<div id="cursor-glow"></div>
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх">↑</button>
 
 <nav>
   <div class="nav-logo">MONREAL</div>
@@ -1551,6 +1658,26 @@
   if (window.location.hash) history.replaceState(null, '', window.location.pathname);
   window.scrollTo(0, 0);
 
+  /* ── Scroll progress bar ── */
+  const progressBar = document.getElementById('scroll-progress');
+  const scrollTopBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    progressBar.style.width = pct + '%';
+    // Кнопка наверх
+    scrollTopBtn.classList.toggle('show', h.scrollTop > 400);
+    // Nav scrolled style
+    document.querySelector('nav').classList.toggle('scrolled', h.scrollTop > 10);
+  }, { passive: true });
+
+  /* ── Cursor glow ── */
+  const cursorGlow = document.getElementById('cursor-glow');
+  document.addEventListener('mousemove', e => {
+    cursorGlow.style.left = e.clientX + 'px';
+    cursorGlow.style.top  = e.clientY + 'px';
+  }, { passive: true });
+
   const SERVER_IP = 'epyc2.worldhosts.fun:26163';
   const LAUNCH_DATE = new Date('2026-02-14');
 
@@ -1747,23 +1874,80 @@
     setTimeout(type, 600);
   })();
 
+  /* ── 3D Card tilt ── */
+  function addTilt(selector) {
+    document.querySelectorAll(selector).forEach(card => {
+      card.classList.add('tilt-card');
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width  - 0.5;
+        const y = (e.clientY - r.top)  / r.height - 0.5;
+        card.style.transform = `perspective(600px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-3px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform .5s cubic-bezier(.16,1,.3,1), border-color .2s, box-shadow .2s';
+        card.style.transform = '';
+        setTimeout(() => card.style.transition = '', 500);
+      });
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'transform .1s ease, border-color .2s, box-shadow .2s';
+      });
+    });
+  }
+  addTilt('.fame-card, .mechanic-card, .step-card');
+
+  /* ── Animated counters ── */
+  function animateCount(el, target, suffix = '') {
+    const isNum = !isNaN(parseInt(target));
+    if (!isNum) return;
+    const end = parseInt(target);
+    const dur = 1200;
+    const step = dur / end;
+    let cur = 0;
+    const t = setInterval(() => {
+      cur = Math.min(cur + Math.ceil(end / 40), end);
+      el.textContent = cur + suffix;
+      if (cur >= end) clearInterval(t);
+    }, step > 50 ? step : 30);
+  }
+  const counterIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const val = el.dataset.count;
+      if (val) animateCount(el, val, el.dataset.suffix || '');
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  // Добавляем data-count к статам
+  document.querySelectorAll('.stat-value').forEach(el => {
+    const txt = el.textContent.trim();
+    const num = parseInt(txt);
+    if (!isNaN(num) && num > 0) {
+      el.dataset.count = num;
+      el.dataset.suffix = txt.replace(num, '');
+      el.textContent = '0' + (el.dataset.suffix || '');
+      counterIO.observe(el);
+    }
+  });
+
   /* ── Scroll animation ── */
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
       if (e.isIntersecting) {
         setTimeout(() => {
           e.target.style.opacity = '1';
-          e.target.style.transform = e.target.dataset.animFrom || 'translateY(0)';
-        }, i * 60);
+          e.target.style.transform = '';
+        }, i * 65);
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.07 });
+  }, { threshold: 0.06 });
 
-  document.querySelectorAll('.mod-card, .step-card, .fame-card, .timeline-item, .faq-item, .gallery-item').forEach(el => {
+  document.querySelectorAll('.mod-card, .step-card, .fame-card, .mechanic-card, .timeline-item, .faq-item, .gallery-item, .download-hero, .ip-banner').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity .45s ease, transform .45s ease, border-color .2s, box-shadow .2s';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1), border-color .2s, box-shadow .2s';
     io.observe(el);
   });
 </script>
