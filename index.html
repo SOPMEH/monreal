@@ -11,6 +11,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── Forest theme (default) ── */
     :root {
       --bg:       #030805;
       --bg2:      #050E08;
@@ -37,6 +38,90 @@
       --gray2:    #4E5E54;
       --gray3:    #2A3A30;
     }
+
+    /* ── Sculk theme ── */
+    [data-theme="sculk"] {
+      --bg:       #03030A;
+      --bg2:      #05050F;
+      --bg3:      #080814;
+      --card:     #0A0A18;
+      --card2:    #0D0D1F;
+      --border:   #141430;
+      --border2:  #1E1E50;
+      --accent:   #0D5F6E;
+      --accent2:  #0A4A56;
+      --accent3:  #1A9BAD;
+      --gold:     #00CFCF;
+      --gold2:    #4DFFEE;
+      --gold3:    #22DDDD;
+      --text:     #C8E8F0;
+      --text2:    #5A8A9A;
+      --text3:    #2A4A54;
+      --green:    #00CFCF;
+      --purple:   #7B5EA7;
+      --yellow:   #7B5EA7;
+      --yellow2:  #A07FD0;
+      --yellow3:  #5A3D8A;
+      --gray:     #6A7A8A;
+      --gray2:    #3A4A54;
+      --gray3:    #1A2A34;
+    }
+
+    /* Sculk-специфичные правила */
+    [data-theme="sculk"] body {
+      background: var(--bg);
+    }
+    [data-theme="sculk"] .aurora-blob:nth-child(1) {
+      background: radial-gradient(circle, rgba(0,150,180,.22) 0%, transparent 70%);
+    }
+    [data-theme="sculk"] .aurora-blob:nth-child(2) {
+      background: radial-gradient(circle, rgba(80,0,180,.16) 0%, transparent 70%);
+    }
+    [data-theme="sculk"] .aurora-blob:nth-child(3) {
+      background: radial-gradient(circle, rgba(0,200,200,.12) 0%, transparent 70%);
+    }
+    [data-theme="sculk"] .aurora-blob:nth-child(4) {
+      background: radial-gradient(circle, rgba(60,0,140,.14) 0%, transparent 70%);
+    }
+    [data-theme="sculk"] .preloader-logo {
+      color: var(--gold2);
+      text-shadow: 0 0 40px rgba(0,207,207,.7), 0 0 80px rgba(0,207,207,.2);
+    }
+    [data-theme="sculk"] #scroll-progress {
+      background: linear-gradient(90deg, var(--accent) 0%, var(--gold2) 100%);
+      box-shadow: 0 0 10px rgba(0,207,207,.7);
+    }
+    [data-theme="sculk"] .vine-canvas { filter: hue-rotate(140deg); }
+
+    /* ── Theme toggle button ── */
+    #themeToggle {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 13px; border-radius: 8px; cursor: pointer;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text2); font-size: .75rem; font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: all .2s; white-space: nowrap;
+    }
+    #themeToggle:hover { border-color: var(--accent3); color: var(--text); }
+    #themeToggle .theme-icon { font-size: .9rem; transition: transform .4s; }
+    #themeToggle:hover .theme-icon { transform: rotate(20deg); }
+
+    /* ── Visit counter ── */
+    .visit-counter {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .72rem; color: var(--text3); margin-top: 10px;
+    }
+    .visit-counter strong { color: var(--text2); }
+
+    /* ── Share button ── */
+    .share-tg {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 10px;
+      background: rgba(0,136,204,.12); border: 1px solid rgba(0,136,204,.25);
+      color: #60BFFF; font-size: .82rem; font-weight: 600;
+      text-decoration: none; transition: all .2s; cursor: pointer;
+    }
+    .share-tg:hover { background: rgba(0,136,204,.22); border-color: rgba(0,136,204,.5); color: #90D0FF; }
 
     html { scroll-behavior: smooth; }
     body {
@@ -1186,6 +1271,10 @@
     <li><a href="#connect">IP</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:10px;">
+    <button id="themeToggle" onclick="toggleTheme()" title="Сменить тему">
+      <span class="theme-icon">🌿</span>
+      <span id="themeLabel">Лес</span>
+    </button>
     <div class="nav-ip" onclick="copyIP()">
       <span class="dot"></span>
       <span>epyc2.worldhosts.fun:26163</span>
@@ -2048,7 +2137,16 @@
 
 <footer>
   <p><strong>MONREAL</strong> · Fabric 1.21.11 · Vanilla+ SMP</p>
-  <p style="margin-top:8px;color:#1A3D22;">Сделано с ❤️ для своих</p>
+  <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+    <a class="share-tg" id="shareTg" href="#" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.9l-2.965-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.963.659z"/></svg>
+      Поделиться в Telegram
+    </a>
+    <div class="visit-counter">
+      👁 Сайт посетили: <strong id="visitCount">...</strong> раз
+    </div>
+  </div>
+  <p style="margin-top:12px;color:#1A3D22;">Сделано с ❤️ для своих</p>
 </footer>
 
 <div class="toast" id="toast">
@@ -2060,6 +2158,57 @@
   // Всегда начинать с верха страницы
   if (window.location.hash) history.replaceState(null, '', window.location.pathname);
   window.scrollTo(0, 0);
+
+  /* ── Theme toggle ── */
+  (function() {
+    const saved = localStorage.getItem('monreal-theme') || 'forest';
+    applyTheme(saved);
+
+    function applyTheme(theme) {
+      const btn   = document.getElementById('themeToggle');
+      const label = document.getElementById('themeLabel');
+      const icon  = btn?.querySelector('.theme-icon');
+      if (theme === 'sculk') {
+        document.documentElement.setAttribute('data-theme', 'sculk');
+        if (label) label.textContent = 'Скалк';
+        if (icon)  icon.textContent  = '🔵';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        if (label) label.textContent = 'Лес';
+        if (icon)  icon.textContent  = '🌿';
+      }
+      localStorage.setItem('monreal-theme', theme);
+    }
+
+    window.toggleTheme = function() {
+      const cur = localStorage.getItem('monreal-theme') || 'forest';
+      applyTheme(cur === 'sculk' ? 'forest' : 'sculk');
+    };
+  })();
+
+  /* ── Visit counter (localStorage) ── */
+  (function() {
+    const el = document.getElementById('visitCount');
+    if (!el) return;
+    let count = parseInt(localStorage.getItem('monreal-visits') || '0') + 1;
+    localStorage.setItem('monreal-visits', count);
+    // Анимируем число
+    let cur = Math.max(0, count - 20);
+    const t = setInterval(() => {
+      cur = Math.min(cur + 1, count);
+      el.textContent = cur.toLocaleString('ru');
+      if (cur >= count) clearInterval(t);
+    }, 40);
+  })();
+
+  /* ── Telegram share ── */
+  (function() {
+    const btn = document.getElementById('shareTg');
+    if (!btn) return;
+    const url  = encodeURIComponent('https://sopmeh.github.io/monreal/');
+    const text = encodeURIComponent('🌿 MONREAL — кастомный Minecraft сервер! Fabric 1.21, джунгли, экономика и своя атмосфера. Заходи!');
+    btn.href = `https://t.me/share/url?url=${url}&text=${text}`;
+  })();
 
   /* ── Preloader ── */
   (function() {
