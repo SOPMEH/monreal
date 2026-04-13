@@ -1081,7 +1081,6 @@
     <div class="fame-card first-place">
       <div class="fame-rank">✦ ОСНОВАТЕЛЬ</div>
       <div class="fame-avatar-wrap">
-        <div class="fame-crown">👑</div>
         <img class="fame-avatar"
              src="https://mc-heads.net/avatar/SOPMEHUA/128"
              alt="SOPMEHUA"
@@ -1206,7 +1205,6 @@
         <li>Собрана сборка из 50+ модов — производительность, визуал, механики</li>
         <li>Установлена кастомная авторизация MONREAL Auth с красивым UI</li>
         <li>Голосовой чат через Simple Voice Chat</li>
-        <li>Первые игроки зашли на сервер и начали строить мир</li>
       </ul>
     </div>
 
@@ -1312,6 +1310,10 @@
 </div>
 
 <script>
+  // Всегда начинать с верха страницы
+  if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+  window.scrollTo(0, 0);
+
   const SERVER_IP = 'epyc2.worldhosts.fun:26163';
   const LAUNCH_DATE = new Date('2026-02-14');
 
