@@ -342,6 +342,76 @@
     .typing-cursor { display:inline-block; width:2px; height:1em; background:var(--gold3); margin-left:2px; vertical-align:middle; animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
+    /* ── Map ── */
+    .map-card {
+      position: relative; background: var(--card); border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden; min-height: 420px;
+      display: flex; flex-direction: column;
+    }
+    .map-iframe-wrap {
+      flex: 1; position: relative; min-height: 420px;
+    }
+    .map-iframe-wrap iframe {
+      width: 100%; height: 100%; min-height: 420px; border: none; display: block;
+    }
+    .map-overlay {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, rgba(3,8,5,.7) 100%);
+      pointer-events: none;
+    }
+    /* Фейковый фон карты когда iframe не грузится */
+    .map-bg {
+      position: absolute; inset: 0; overflow: hidden;
+      background: #0a1a0e;
+    }
+    .map-bg-grid {
+      position: absolute; inset: -10px;
+      background-image:
+        linear-gradient(rgba(34,204,102,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,204,102,.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+      animation: mapScroll 20s linear infinite;
+    }
+    @keyframes mapScroll { from { transform: translate(0,0); } to { transform: translate(32px, 32px); } }
+    .map-bg-glow {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,204,102,.15) 0%, transparent 70%);
+    }
+    .map-center-content {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 20px; text-align: center; padding: 24px;
+    }
+    .map-icon { font-size: 3.5rem; filter: drop-shadow(0 0 20px rgba(34,204,102,.4)); }
+    .map-center-content h3 { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+    .map-center-content p { font-size: .85rem; color: var(--text2); max-width: 340px; line-height: 1.6; }
+    .map-stats-bar {
+      display: flex; gap: 0; border-top: 1px solid var(--border);
+    }
+    .map-stat {
+      flex: 1; padding: 14px; text-align: center; border-right: 1px solid var(--border);
+    }
+    .map-stat:last-child { border-right: none; }
+    .map-stat-val { font-family: 'JetBrains Mono', monospace; font-size: .85rem; font-weight: 700; color: var(--gold3); }
+    .map-stat-lbl { font-size: .65rem; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+    .map-open-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; border-radius: 10px; font-size: .95rem; font-weight: 700;
+      text-decoration: none; transition: all .25s; cursor: pointer;
+      background: linear-gradient(135deg, #1A7A3C 0%, #22CC66 60%, #44FF88 100%);
+      color: #021A0A; box-shadow: 0 4px 24px rgba(34,204,102,.4);
+    }
+    .map-open-btn:hover { box-shadow: 0 6px 32px rgba(34,204,102,.6); transform: translateY(-2px) scale(1.02); }
+    .map-hint {
+      font-size: .72rem; color: var(--text3); display: flex; align-items: center; gap: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .map-card { min-height: 340px; }
+      .map-iframe-wrap { min-height: 300px; }
+      .map-stats-bar { flex-wrap: wrap; }
+      .map-stat { min-width: 50%; }
+    }
+
     /* ── Gallery ── */
     .gallery-grid {
       columns: 3; column-gap: 12px;
@@ -570,6 +640,7 @@
     <li><a href="#download">Скачать</a></li>
     <li><a href="#mods">Моды</a></li>
     <li><a href="#gallery">Галерея</a></li>
+    <li><a href="#map">Карта</a></li>
     <li><a href="#fame">Слава</a></li>
     <li><a href="#changelog">Новости</a></li>
     <li><a href="#faq">FAQ</a></li>
@@ -590,6 +661,7 @@
   <a href="#download"  onclick="closeMenu()">⬇ Скачать модпак</a>
   <a href="#mods"      onclick="closeMenu()">🧩 Список модов</a>
   <a href="#gallery"   onclick="closeMenu()">📸 Галерея</a>
+  <a href="#map"       onclick="closeMenu()">🗺️ Карта мира</a>
   <a href="#fame"      onclick="closeMenu()">⭐ Стена Славы</a>
   <a href="#changelog" onclick="closeMenu()">📰 Новости</a>
   <a href="#faq"       onclick="closeMenu()">❓ FAQ</a>
@@ -1069,6 +1141,61 @@
 
 <div class="divider"></div>
 
+<!-- ── Map ───────────────────────────────────────────────────────── -->
+<section id="map">
+  <div class="section-label">Живой мир</div>
+  <h2>Карта <span>сервера</span></h2>
+  <p class="section-desc">Интерактивная карта мира MONREAL в реальном времени — постройки, рельеф, игроки онлайн.</p>
+
+  <div class="map-card">
+    <div class="map-iframe-wrap">
+      <!-- Красивый фон (виден если iframe не грузится из-за HTTPS) -->
+      <div class="map-bg">
+        <div class="map-bg-grid"></div>
+        <div class="map-bg-glow" style="width:500px;height:500px;top:-100px;left:-100px;"></div>
+        <div class="map-bg-glow" style="width:300px;height:300px;bottom:0;right:100px;"></div>
+      </div>
+      <div class="map-overlay"></div>
+
+      <!-- Центральный контент -->
+      <div class="map-center-content">
+        <div class="map-icon">🗺️</div>
+        <h3>Интерактивная карта MONREAL</h3>
+        <p>Живая карта мира с постройками игроков, биомами и онлайн-метками. Открывается в полноэкранном режиме.</p>
+        <a href="http://epyc2.worldhosts.fun:8123" target="_blank" rel="noopener" class="map-open-btn">
+          🗺️ &nbsp;Открыть карту
+        </a>
+        <div class="map-hint">
+          <span>🔗</span>
+          <span>epyc2.worldhosts.fun:8123 · Powered by Dynmap</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Статистика под картой -->
+    <div class="map-stats-bar">
+      <div class="map-stat">
+        <div class="map-stat-val">Overworld</div>
+        <div class="map-stat-lbl">Измерение</div>
+      </div>
+      <div class="map-stat">
+        <div class="map-stat-val" id="mapOnline">—</div>
+        <div class="map-stat-lbl">Игроков онлайн</div>
+      </div>
+      <div class="map-stat">
+        <div class="map-stat-val">Dynmap</div>
+        <div class="map-stat-lbl">Движок карты</div>
+      </div>
+      <div class="map-stat">
+        <div class="map-stat-val">Live</div>
+        <div class="map-stat-lbl">Обновление</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- ── Wall of Fame ──────────────────────────────────────────────── -->
 <section id="fame">
   <div class="section-label">Легенды сервера</div>
@@ -1378,11 +1505,16 @@
       const el = document.getElementById('onlineStat');
       if (!el) return;
       if (d.online) {
-        el.textContent = (d.players?.online ?? 0) + '/' + (d.players?.max ?? '?');
+        const cnt = d.players?.online ?? 0;
+        el.textContent = cnt + '/' + (d.players?.max ?? '?');
         el.style.color = 'var(--gold2)';
+        const mapEl = document.getElementById('mapOnline');
+        if (mapEl) { mapEl.textContent = cnt; mapEl.style.color = 'var(--gold3)'; }
       } else {
         el.textContent = 'офлайн';
         el.style.color = 'var(--text3)';
+        const mapEl = document.getElementById('mapOnline');
+        if (mapEl) mapEl.textContent = '0';
       }
     } catch(e) {
       const el = document.getElementById('onlineStat');
