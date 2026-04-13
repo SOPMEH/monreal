@@ -2415,49 +2415,53 @@
     io.observe(el);
   });
 
-  /* ── Parallax (depth layers, no gaps) ── */
+  /* ── Parallax 1: hero background (aurora) ── */
   (function() {
-    // Каждый элемент двигается со своей скоростью относительно своей секции
-    // speed > 0 = медленнее скролла (фон), speed < 0 = быстрее (передний план)
-    const items = [
-      // Aurora blobs — самый дальний слой
-      { sel: '.aurora-blob:nth-child(1)', speed: 0.18 },
-      { sel: '.aurora-blob:nth-child(2)', speed: 0.12 },
-      { sel: '.aurora-blob:nth-child(3)', speed: 0.22 },
-      { sel: '.aurora-blob:nth-child(4)', speed: 0.09 },
-      // Иконки механик — средний план
-      { sel: '.mechanic-icon',    speed: -0.12, perEl: true },
-      // Иконки модов — чуть спереди
-      { sel: '.mod-icon',         speed: -0.09, perEl: true },
-      // Аватары в зале славы — передний план
-      { sel: '.fame-avatar-wrap', speed: -0.16, perEl: true },
-      // Section labels — дальний фон
-      { sel: '.section-label',    speed: 0.10, perEl: true },
+    const aurora = document.querySelector('.aurora');
+    const particles = document.getElementById('particles');
+    if (!aurora) return;
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      aurora.style.transform    = `translateY(${y * 0.35}px)`;
+      if (particles) particles.style.transform = `translateY(${y * 0.15}px)`;
+    }, { passive: true });
+  })();
+
+  /* ── Parallax 2: карточки (внутри каждой карточки фоновый слой сдвигается) ── */
+  (function() {
+    // Для каждой карточки считаем её позицию относительно viewport при скролле
+    // и сдвигаем её декоративный псевдоэлемент / иконку / аватар
+    const cards = [
+      // [селектор контейнера, селектор внутреннего элемента, скорость]
+      { wrap: '.fame-card',     inner: '.fame-avatar-wrap', speed: 0.08 },
+      { wrap: '.mechanic-card', inner: '.mechanic-icon',    speed: 0.10 },
+      { wrap: '.step-card',     inner: '.step-num',         speed: 0.06 },
+      { wrap: '.timeline-item', inner: '.timeline-date',    speed: 0.07 },
     ];
 
-    const els = items.flatMap(item => {
-      if (item.perEl) {
-        return Array.from(document.querySelectorAll(item.sel)).map(el => ({ el, speed: item.speed }));
-      }
-      const el = document.querySelector(item.sel);
-      return el ? [{ el, speed: item.speed }] : [];
-    });
-
-    // Сохраняем стартовую позицию каждого элемента относительно документа
-    els.forEach(item => {
-      item.originY = item.el.getBoundingClientRect().top + window.scrollY;
+    const els = [];
+    cards.forEach(({ wrap, inner, speed }) => {
+      document.querySelectorAll(wrap).forEach(card => {
+        const innerEl = card.querySelector(inner);
+        if (innerEl) {
+          innerEl.style.willChange = 'transform';
+          els.push({ card, innerEl, speed });
+        }
+      });
     });
 
     function onScroll() {
-      const scrollY = window.scrollY;
-      els.forEach(({ el, speed, originY }) => {
-        // Смещение = насколько элемент "отстал" или "опередил" скролл
-        const offset = (scrollY - originY) * speed;
-        el.style.transform = `translateY(${offset}px)`;
+      const vh = window.innerHeight;
+      els.forEach(({ card, innerEl, speed }) => {
+        const rect = card.getBoundingClientRect();
+        // Прогресс: 0 когда карточка в центре экрана, ±1 когда за краем
+        const center = rect.top + rect.height / 2 - vh / 2;
+        innerEl.style.transform = `translateY(${center * speed}px)`;
       });
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   })();
 
   /* ── Falling leaves ── */
