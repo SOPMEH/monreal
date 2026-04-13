@@ -360,6 +360,114 @@
     .typing-cursor { display:inline-block; width:2px; height:1em; background:var(--gold3); margin-left:2px; vertical-align:middle; animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
+    /* ── Aurora background ── */
+    .aurora {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .aurora-blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); mix-blend-mode: screen;
+    }
+    .aurora-blob:nth-child(1) {
+      width: 600px; height: 600px; top: -150px; left: -100px;
+      background: radial-gradient(circle, rgba(26,122,60,.22) 0%, transparent 70%);
+      animation: auroraFloat1 12s ease-in-out infinite;
+    }
+    .aurora-blob:nth-child(2) {
+      width: 500px; height: 500px; top: 20%; right: -80px;
+      background: radial-gradient(circle, rgba(34,204,102,.14) 0%, transparent 70%);
+      animation: auroraFloat2 16s ease-in-out infinite;
+    }
+    .aurora-blob:nth-child(3) {
+      width: 700px; height: 400px; bottom: 10%; left: 20%;
+      background: radial-gradient(circle, rgba(17,170,68,.1) 0%, transparent 70%);
+      animation: auroraFloat3 20s ease-in-out infinite;
+    }
+    .aurora-blob:nth-child(4) {
+      width: 350px; height: 350px; top: 50%; right: 25%;
+      background: radial-gradient(circle, rgba(68,255,136,.08) 0%, transparent 70%);
+      animation: auroraFloat1 14s ease-in-out infinite reverse;
+    }
+    @keyframes auroraFloat1 {
+      0%,100% { transform: translate(0, 0) scale(1); }
+      33%      { transform: translate(60px, -40px) scale(1.1); }
+      66%      { transform: translate(-30px, 50px) scale(.95); }
+    }
+    @keyframes auroraFloat2 {
+      0%,100% { transform: translate(0, 0) scale(1); }
+      40%      { transform: translate(-80px, 60px) scale(1.15); }
+      70%      { transform: translate(50px, -30px) scale(.9); }
+    }
+    @keyframes auroraFloat3 {
+      0%,100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50%      { transform: translate(40px, -60px) scale(1.08) rotate(5deg); }
+    }
+
+    /* ── Noise texture ── */
+    .noise-overlay {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      opacity: .025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── Player modal ── */
+    .player-modal-bg {
+      position: fixed; inset: 0; z-index: 900;
+      background: rgba(0,0,0,.6); backdrop-filter: blur(8px);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s ease;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .player-modal-bg.open { opacity: 1; pointer-events: all; }
+    .player-modal-card {
+      background: rgba(10,22,12,.75);
+      backdrop-filter: blur(40px) saturate(200%);
+      border: 1px solid rgba(34,204,102,.2);
+      border-radius: 24px; padding: 40px 36px; max-width: 420px; width: 100%;
+      position: relative; text-align: center;
+      transform: scale(.92) translateY(20px);
+      transition: transform .4s cubic-bezier(.16,1,.3,1);
+      box-shadow: 0 24px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(34,204,102,.08);
+    }
+    .player-modal-bg.open .player-modal-card { transform: scale(1) translateY(0); }
+    .modal-close {
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; color: var(--text3); font-size: 1.2rem;
+      cursor: pointer; transition: color .2s; line-height: 1;
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+    }
+    .modal-close:hover { color: var(--text); background: rgba(255,255,255,.05); }
+    .modal-avatar {
+      width: 96px; height: 96px; border-radius: 16px;
+      image-rendering: pixelated; margin: 0 auto 16px;
+      border: 2px solid rgba(34,204,102,.3);
+      box-shadow: 0 0 30px rgba(34,204,102,.2);
+    }
+    .modal-name { font-size: 1.4rem; font-weight: 900; margin-bottom: 4px; }
+    .modal-role {
+      font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--accent3); margin-bottom: 16px; display: block;
+      padding: 3px 12px; background: rgba(34,204,102,.1); border: 1px solid rgba(34,204,102,.2);
+      border-radius: 100px; width: fit-content; margin-left: auto; margin-right: auto;
+    }
+    .modal-desc { font-size: .84rem; color: var(--text2); line-height: 1.7; margin-bottom: 20px; }
+    .modal-badges { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+    .modal-shine {
+      position: absolute; inset: 0; pointer-events: none; border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,.05) 0%, transparent 50%);
+    }
+
+    /* Fame card — clickable hint */
+    .fame-card { cursor: pointer; }
+    .fame-card::after {
+      content: ''; position: absolute; inset: 0; border-radius: 18px;
+      border: 1px solid transparent;
+      transition: border-color .3s;
+    }
+    .fame-card:hover::after { border-color: rgba(34,204,102,.25); }
+
     /* ── Liquid Glass ── */
     .glass {
       background: rgba(10,22,12,.45) !important;
@@ -397,6 +505,8 @@
     }
     /* Wave float after reveal */
     .hero-letter.revealed {
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 30px rgba(34,204,102,.35)) !important;
       animation: letterWave 3.5s ease-in-out infinite;
     }
     @keyframes letterWave {
@@ -642,8 +752,11 @@
       width: 100%; display: block;
       transition: transform .4s ease, filter .3s ease;
       filter: brightness(.9);
+      will-change: transform;
+      backface-visibility: hidden;
+      transform: translateZ(0);
     }
-    .gallery-item:hover img { transform: scale(1.04); filter: brightness(1.05); }
+    .gallery-item:hover img { transform: scale(1.04) translateZ(0); filter: brightness(1.05); }
     .gallery-overlay {
       position:absolute; inset:0; background: linear-gradient(to top, rgba(3,8,5,.85) 0%, transparent 55%);
       opacity:0; transition: opacity .3s;
@@ -853,7 +966,22 @@
 
 <div id="scroll-progress"></div>
 <div id="cursor-glow"></div>
+<div class="aurora"><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div></div>
+<div class="noise-overlay"></div>
 <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх">↑</button>
+
+<!-- Player modal -->
+<div class="player-modal-bg" id="playerModal" onclick="closePlayerModal(event)">
+  <div class="player-modal-card">
+    <div class="modal-shine"></div>
+    <button class="modal-close" onclick="closePlayerModal()">✕</button>
+    <img class="modal-avatar" id="modalAvatar" src="" alt="" />
+    <div class="modal-name" id="modalName"></div>
+    <span class="modal-role" id="modalRole"></span>
+    <div class="modal-desc" id="modalDesc"></div>
+    <div class="modal-badges" id="modalBadges"></div>
+  </div>
+</div>
 
 <nav>
   <div class="nav-logo">MONREAL</div>
@@ -1472,7 +1600,11 @@
   <div class="fame-grid">
 
     <!-- SOPMEHUA -->
-    <div class="fame-card first-place">
+    <div class="fame-card first-place"
+      data-name="SOPMEHUA" data-role="Создатель &amp; Администратор"
+      data-desc="Основал MONREAL и вложил душу в каждую деталь сервера. Делает всё, чтобы на сервере было уютно и интересно — от настройки модов до создания кастомных механик."
+      data-badges="👑 Основатель|fame-badge-green,⚙️ Разработчик|fame-badge-gold,🛡️ Администратор|fame-badge-blue"
+      onclick="openPlayerModal(this)">
       <div class="fame-rank">✦ ОСНОВАТЕЛЬ</div>
       <div class="fame-avatar-wrap">
         <img class="fame-avatar"
@@ -1493,7 +1625,11 @@
     </div>
 
     <!-- Necront -->
-    <div class="fame-card">
+    <div class="fame-card"
+      data-name="Necront" data-role="Бесстрашный Воин"
+      data-desc="Бизнесмен и воин в одном лице. Вошёл в историю сервера, пережив ивент набега в полном одиночестве — туда, куда другие не рискнули зайти."
+      data-badges="⚔️ Воин|fame-badge-red,💰 Бизнесмен|fame-badge-gold,💀 Выжил в набеге|fame-badge-purple"
+      onclick="openPlayerModal(this)">
       <div class="fame-rank">✦ ВЕТЕРАН</div>
       <div class="fame-avatar-wrap">
         <img class="fame-avatar"
@@ -1514,7 +1650,11 @@
     </div>
 
     <!-- Jagermeister_999 -->
-    <div class="fame-card">
+    <div class="fame-card"
+      data-name="Jagermeister_999" data-role="Главная Звёздочка"
+      data-desc="Самая преданная душа сервера. Пережила инцидент со «сталкером», построила для сервера больше, чем кто-либо другой. Настоящее сердце MONREAL."
+      data-badges="⭐ Звёздочка|fame-badge-purple,🏗️ Строитель|fame-badge-green,👁️ Пережила сталкера|fame-badge-red"
+      onclick="openPlayerModal(this)">
       <div class="fame-rank">✦ СТРОИТЕЛЬ</div>
       <div class="fame-avatar-wrap">
         <img class="fame-avatar"
@@ -2022,6 +2162,40 @@
     el.style.transform = 'translateY(24px)';
     el.style.transition = 'opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1), border-color .2s, box-shadow .2s';
     io.observe(el);
+  });
+
+  /* ── Player Modal ── */
+  function openPlayerModal(card) {
+    document.getElementById('modalAvatar').src = 'https://mc-heads.net/avatar/' + card.dataset.name + '/128';
+    document.getElementById('modalName').textContent = card.dataset.name;
+    document.getElementById('modalRole').textContent = card.dataset.role;
+    document.getElementById('modalDesc').textContent = card.dataset.desc;
+    const badgesEl = document.getElementById('modalBadges');
+    badgesEl.innerHTML = '';
+    (card.dataset.badges || '').split(',').forEach(b => {
+      const parts = b.split('|');
+      const text = parts[0];
+      const cls = parts[1] || '';
+      const span = document.createElement('span');
+      span.className = 'fame-badge ' + cls;
+      span.textContent = text;
+      badgesEl.appendChild(span);
+    });
+    document.getElementById('playerModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePlayerModal(e) {
+    if (e && e.target !== document.getElementById('playerModal') && !e.target.classList.contains('modal-close')) return;
+    document.getElementById('playerModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.getElementById('playerModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
   });
 </script>
 </body>
