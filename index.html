@@ -67,31 +67,205 @@
       --gray3:    #1A2A34;
     }
 
-    /* Sculk-специфичные правила */
+    /* ════════════════════════════════════════
+       SCULK / DEEP DARK THEME
+       ════════════════════════════════════════ */
+
+    /* Sculk texture pattern — имитация поверхности блока скалка */
+    @keyframes sculkPulse {
+      0%,100% { opacity: .018; }
+      50%     { opacity: .034; }
+    }
+    @keyframes sculkVeinGlow {
+      0%,100% { opacity: .22; filter: blur(2px); }
+      50%     { opacity: .55; filter: blur(1px); }
+    }
+    @keyframes wardenEye {
+      0%,90%,100% { opacity: 0; transform: scale(.6); }
+      93%,97%     { opacity: 1; transform: scale(1); }
+    }
+    @keyframes sculkRipple {
+      0%   { transform: scale(.5); opacity: .6; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+    @keyframes soulFire {
+      0%,100% { opacity: .3; transform: scaleY(1) translateY(0); }
+      50%     { opacity: .6; transform: scaleY(1.15) translateY(-3px); }
+    }
+
     [data-theme="sculk"] body {
       background: var(--bg);
+      /* Глубокая темнота — почти без света */
+      background-image:
+        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(0,100,120,.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 20% 50%,  rgba(60,0,140,.06) 0%, transparent 50%);
     }
+
+    /* Sculk-текстура на фоне страницы */
+    [data-theme="sculk"] body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        /* Мелкая сетка скалка */
+        repeating-linear-gradient(0deg,   rgba(0,180,200,.015) 0px, rgba(0,180,200,.015) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(90deg,  rgba(0,180,200,.015) 0px, rgba(0,180,200,.015) 1px, transparent 1px, transparent 12px),
+        /* Крупные прожилки */
+        repeating-linear-gradient(30deg,  rgba(0,220,220,.008) 0px, rgba(0,220,220,.008) 2px, transparent 2px, transparent 60px),
+        repeating-linear-gradient(-30deg, rgba(80,0,180,.006)  0px, rgba(80,0,180,.006)  2px, transparent 2px, transparent 80px);
+      animation: sculkPulse 4s ease-in-out infinite;
+    }
+
+    /* Светящиеся прожилки скалка по краям карточек */
+    [data-theme="sculk"] .mod-card,
+    [data-theme="sculk"] .mechanic-card,
+    [data-theme="sculk"] .step-card,
+    [data-theme="sculk"] .fame-card,
+    [data-theme="sculk"] .faq-item,
+    [data-theme="sculk"] .timeline-item {
+      border-color: rgba(0,160,180,.25) !important;
+      box-shadow: 0 0 0 1px rgba(0,200,220,.04), inset 0 0 30px rgba(0,100,140,.08);
+      background-image:
+        repeating-linear-gradient(0deg,  rgba(0,180,200,.018) 0px, rgba(0,180,200,.018) 1px, transparent 1px, transparent 8px),
+        repeating-linear-gradient(90deg, rgba(0,180,200,.018) 0px, rgba(0,180,200,.018) 1px, transparent 1px, transparent 8px);
+    }
+    [data-theme="sculk"] .mod-card:hover,
+    [data-theme="sculk"] .mechanic-card:hover,
+    [data-theme="sculk"] .fame-card:hover {
+      border-color: rgba(0,220,240,.5) !important;
+      box-shadow: 0 0 20px rgba(0,200,220,.15), 0 0 60px rgba(0,200,220,.05), inset 0 0 30px rgba(0,120,160,.12) !important;
+    }
+
+    /* Прожилки скалка на hover (псевдоэлемент) */
+    [data-theme="sculk"] .mod-card::after,
+    [data-theme="sculk"] .mechanic-card::after,
+    [data-theme="sculk"] .fame-card::after {
+      content: '';
+      position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(0,220,240,.06) 0%, transparent 40%, transparent 60%, rgba(80,0,200,.04) 100%);
+      opacity: 0; transition: opacity .3s;
+    }
+    [data-theme="sculk"] .mod-card:hover::after,
+    [data-theme="sculk"] .mechanic-card:hover::after,
+    [data-theme="sculk"] .fame-card:hover::after { opacity: 1; }
+
+    /* Aurora — атмосфера Deep Dark */
     [data-theme="sculk"] .aurora-blob:nth-child(1) {
-      background: radial-gradient(circle, rgba(0,150,180,.22) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(0,120,160,.28) 0%, transparent 70%);
     }
     [data-theme="sculk"] .aurora-blob:nth-child(2) {
-      background: radial-gradient(circle, rgba(80,0,180,.16) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(80,0,200,.20) 0%, transparent 70%);
     }
     [data-theme="sculk"] .aurora-blob:nth-child(3) {
-      background: radial-gradient(circle, rgba(0,200,200,.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(0,200,220,.16) 0%, transparent 70%);
     }
     [data-theme="sculk"] .aurora-blob:nth-child(4) {
-      background: radial-gradient(circle, rgba(60,0,140,.14) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(40,0,120,.18) 0%, transparent 70%);
     }
+
+    /* Nav */
+    [data-theme="sculk"] nav {
+      background: rgba(2,2,10,0.95);
+      border-bottom-color: rgba(0,160,180,.2);
+    }
+
+    /* Прогресс-бар и scrollbar */
+    [data-theme="sculk"] #scroll-progress {
+      background: linear-gradient(90deg, rgba(0,120,160,1) 0%, rgba(0,220,240,1) 50%, rgba(80,0,200,1) 100%);
+      box-shadow: 0 0 12px rgba(0,220,240,.8), 0 0 30px rgba(0,220,240,.3);
+    }
+    [data-theme="sculk"] ::-webkit-scrollbar-thumb { background: rgba(0,160,180,.5); }
+    [data-theme="sculk"] ::-webkit-scrollbar-thumb:hover { background: rgba(0,200,220,.7); }
+
+    /* Кнопки */
+    [data-theme="sculk"] .btn-gold {
+      background: linear-gradient(135deg, #005A6E 0%, #008FA0 100%);
+      box-shadow: 0 4px 24px rgba(0,200,220,.35);
+    }
+    [data-theme="sculk"] .btn-gold:hover {
+      background: linear-gradient(135deg, #007A8E 0%, #00AFBF 100%);
+      box-shadow: 0 8px 32px rgba(0,220,240,.5);
+    }
+    [data-theme="sculk"] .btn-outline {
+      border-color: rgba(0,180,200,.4); color: rgba(0,220,240,.8);
+    }
+
+    /* Заголовок MONREAL */
+    [data-theme="sculk"] .hero-letter {
+      background: linear-gradient(140deg, #4DFFEE 0%, #00CFCF 35%, #22DDDD 65%, #0066AA 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    [data-theme="sculk"] @keyframes letterIn {
+      to { filter: blur(0px) drop-shadow(0 0 40px rgba(0,220,240,.5)); }
+    }
+
+    /* Секция-метки */
+    [data-theme="sculk"] .section-label { color: rgba(0,200,220,.7); }
+    [data-theme="sculk"] .section-label::before { background: rgba(0,200,220,.5); }
+    [data-theme="sculk"] h2 span { color: var(--gold2); text-shadow: 0 0 20px rgba(0,220,240,.4); }
+
+    /* Divider */
+    [data-theme="sculk"] .divider::after {
+      background: rgba(0,200,220,.4);
+      box-shadow: 0 0 12px rgba(0,200,220,.6), 0 0 30px rgba(0,200,220,.2);
+    }
+
+    /* dot пульс */
+    [data-theme="sculk"] .dot { background: var(--gold2); box-shadow: 0 0 8px var(--gold2); }
+
+    /* IP баннер — световые прожилки */
+    [data-theme="sculk"] .ip-banner::before {
+      background: linear-gradient(90deg,
+        transparent 0%, rgba(0,200,220,.4) 25%,
+        rgba(80,0,200,.35) 50%, rgba(0,200,220,.4) 75%, transparent 100%
+      );
+    }
+
+    /* Preloader */
     [data-theme="sculk"] .preloader-logo {
       color: var(--gold2);
-      text-shadow: 0 0 40px rgba(0,207,207,.7), 0 0 80px rgba(0,207,207,.2);
+      text-shadow: 0 0 40px rgba(0,220,240,.8), 0 0 80px rgba(0,220,240,.3);
     }
-    [data-theme="sculk"] #scroll-progress {
-      background: linear-gradient(90deg, var(--accent) 0%, var(--gold2) 100%);
-      box-shadow: 0 0 10px rgba(0,207,207,.7);
+    [data-theme="sculk"] .preloader-bar {
+      background: linear-gradient(90deg, rgba(0,120,160,1), rgba(0,220,240,1), rgba(80,0,200,1));
+      box-shadow: 0 0 10px rgba(0,220,240,.8);
     }
-    [data-theme="sculk"] .vine-canvas { filter: hue-rotate(140deg); }
+    [data-theme="sculk"] .preloader-pixel span {
+      background: rgba(0,180,200,.3);
+    }
+    [data-theme="sculk"] .preloader-pixel span { animation-name: sculkPixelPop; }
+    @keyframes sculkPixelPop {
+      from { background: rgba(0,100,120,.3); transform: scaleY(1); }
+      to   { background: rgba(0,220,240,1);  transform: scaleY(2.2); }
+    }
+
+    /* Лозы — голубые прожилки скалка */
+    [data-theme="sculk"] .vine-canvas { filter: hue-rotate(155deg) saturate(1.4); opacity: 0.15; }
+
+    /* FAQ стрелка */
+    [data-theme="sculk"] .faq-item.open .faq-arrow { color: var(--gold2); }
+
+    /* Fame badges */
+    [data-theme="sculk"] .fame-badge-green  { background: rgba(0,200,220,.12); color: #4DFFEE; border-color: rgba(0,200,220,.25); }
+    [data-theme="sculk"] .fame-badge-gold   { background: rgba(80,0,200,.12);  color: #AA88FF; border-color: rgba(80,0,200,.25); }
+
+    /* Sculk-специфичный Warden eye — мигает в hero раз в ~7 сек */
+    [data-theme="sculk"] .hero::after {
+      content: '👁';
+      position: absolute; bottom: 18%; left: 50%; transform: translateX(-50%);
+      font-size: 1.4rem;
+      filter: drop-shadow(0 0 12px rgba(0,220,240,.9)) drop-shadow(0 0 30px rgba(0,220,240,.4));
+      animation: wardenEye 7s ease-in-out infinite;
+      pointer-events: none; z-index: 1;
+    }
+
+    /* Soul fire по бокам hero */
+    [data-theme="sculk"] .hero::before {
+      background:
+        radial-gradient(ellipse 80% 55% at 50% 0%, rgba(0,100,160,.22) 0%, transparent 68%),
+        radial-gradient(ellipse 50% 40% at 0%   60%, rgba(0,180,220,.10) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 100% 40%, rgba(60,0,160,.10) 0%, transparent 55%) !important;
+    }
 
     /* ── Theme toggle button ── */
     #themeToggle {
@@ -2708,7 +2882,10 @@
         if (f.y < 0) f.y = H; if (f.y > H) f.y = 0;
         const blink = (Math.sin(t * f.speed * 80 + f.phase) + 1) / 2;
         const a = blink * 0.55 + 0.05;
-        const col = f.yellow ? `rgba(200,160,20,${a})` : `rgba(34,204,102,${a})`;
+        const isSculk = document.documentElement.getAttribute('data-theme') === 'sculk';
+        const col = isSculk
+          ? (f.yellow ? `rgba(100,0,220,${a})` : `rgba(0,210,230,${a})`)
+          : (f.yellow ? `rgba(200,160,20,${a})` : `rgba(34,204,102,${a})`);
         // glow
         const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 5);
         g.addColorStop(0, col);
