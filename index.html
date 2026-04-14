@@ -531,18 +531,72 @@
     .ip-copy:hover { background: var(--accent3); }
 
     /* ── Toast ── */
+    /* ── Toast (улучшенный) ── */
     .toast {
-      position: fixed; bottom: 28px; right: 28px;
-      background: var(--card2); border: 1px solid var(--border2); border-radius: 10px;
-      padding: 12px 18px; font-size: .84rem; font-weight: 600; color: var(--text);
-      display: flex; align-items: center; gap: 9px;
-      box-shadow: 0 8px 28px rgba(0,0,0,.4);
-      transform: translateY(90px); opacity: 0;
-      transition: all .3s cubic-bezier(.34,1.56,.64,1); z-index: 999;
+      position: fixed; bottom: 80px; right: 28px;
+      background: var(--card2); border: 1px solid var(--border2); border-radius: 12px;
+      padding: 13px 18px; font-size: .84rem; font-weight: 600; color: var(--text);
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      transform: translateX(120%); opacity: 0;
+      transition: transform .4s cubic-bezier(.34,1.4,.64,1), opacity .3s ease;
+      z-index: 1000; min-width: 220px;
     }
-    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.show { transform: translateX(0); opacity: 1; }
+    .toast-icon {
+      width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: .9rem;
+    }
+    .toast-icon.success { background: rgba(34,204,102,.15); }
+    .toast-icon.info    { background: rgba(68,160,255,.15); }
+    .toast-icon.warn    { background: rgba(200,160,32,.15); }
+    .toast-body { display: flex; flex-direction: column; gap: 1px; }
+    .toast-title { font-size: .8rem; font-weight: 700; }
+    .toast-sub   { font-size: .72rem; color: var(--text2); font-weight: 400; }
+    .toast-progress {
+      position: absolute; bottom: 0; left: 0; height: 2px; border-radius: 0 0 12px 12px;
+      background: var(--accent3); width: 100%;
+      transform-origin: left; animation: toastProgress 2.4s linear forwards;
+    }
+    @keyframes toastProgress {
+      from { transform: scaleX(1); }
+      to   { transform: scaleX(0); }
+    }
 
-    .divider { height: 1px; background: linear-gradient(90deg,transparent,var(--border2),transparent); margin: 0 48px; }
+    /* ── Gradient divider ── */
+    .divider {
+      height: 40px; margin: 0 48px; position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .divider::before {
+      content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--border2) 20%,
+        var(--accent3) 40%,
+        var(--gold2) 50%,
+        var(--accent3) 60%,
+        var(--border2) 80%,
+        transparent 100%
+      );
+    }
+    .divider::after {
+      content: '◆'; font-size: .55rem; color: var(--gold2);
+      background: var(--bg); padding: 0 12px; z-index: 1; position: relative;
+      text-shadow: 0 0 8px var(--gold2);
+    }
+
+    /* ── Magnetic buttons ── */
+    .btn { position: relative; }
+
+    /* ── Section title letter reveal ── */
+    .reveal-word { overflow: hidden; display: inline-block; }
+    .reveal-char {
+      display: inline-block;
+      opacity: 0; transform: translateY(100%);
+      transition: opacity .5s ease, transform .5s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal-char.visible { opacity: 1; transform: translateY(0); }
 
     footer { padding: 36px 48px; text-align: center; color: var(--text3); font-size: .78rem; border-top: 1px solid var(--border); max-width: 1200px; margin: 36px auto 0; }
     footer strong { color: var(--gold3); }
@@ -841,14 +895,17 @@
     /* Download button pulse */
     .btn-gold { animation: glowPulse 3s ease-in-out infinite; }
 
-    /* Divider glow */
-    .divider { position: relative; overflow: visible; }
-    .divider::after {
-      content: ''; position: absolute; left: 50%; top: 0; transform: translateX(-50%);
-      width: 120px; height: 1px;
-      background: var(--accent3);
-      box-shadow: 0 0 12px var(--accent3);
-      border-radius: 1px;
+    /* Sculk divider override */
+    [data-theme="sculk"] .divider::before {
+      background: linear-gradient(90deg,
+        transparent 0%, rgba(0,160,180,.3) 20%,
+        rgba(0,210,230,.6) 40%, rgba(80,0,200,.5) 50%,
+        rgba(0,210,230,.6) 60%, rgba(0,160,180,.3) 80%, transparent 100%
+      );
+    }
+    [data-theme="sculk"] .divider::after {
+      color: var(--gold2); text-shadow: 0 0 8px var(--gold2);
+      background: var(--bg);
     }
 
     /* IP addr glow */
@@ -2342,8 +2399,12 @@
 </footer>
 
 <div class="toast" id="toast">
-  <span>✓</span>
-  <span id="toastText">Скопировано!</span>
+  <div class="toast-icon success" id="toastIcon">✓</div>
+  <div class="toast-body">
+    <div class="toast-title" id="toastTitle">Готово</div>
+    <div class="toast-sub"   id="toastText"></div>
+  </div>
+  <div class="toast-progress" id="toastProgress"></div>
 </div>
 
 <script>
@@ -2477,13 +2538,26 @@
 
   /* ── Copy IP ── */
   function copyIP() {
-    navigator.clipboard.writeText(SERVER_IP).then(() => showToast('IP скопирован!'));
+    navigator.clipboard.writeText(SERVER_IP).then(() => showToast('IP скопирован!', SERVER_IP, 'success'));
   }
-  function showToast(text) {
-    const t = document.getElementById('toast');
-    document.getElementById('toastText').textContent = text;
+  function showToast(title, sub = '', type = 'success') {
+    const t    = document.getElementById('toast');
+    const icon = document.getElementById('toastIcon');
+    const prog = document.getElementById('toastProgress');
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastText').textContent  = sub;
+    const icons = { success: '✓', info: 'ℹ', warn: '⚠' };
+    const cols  = { success: 'rgba(34,204,102,.6)', info: 'rgba(68,160,255,.6)', warn: 'rgba(200,160,32,.6)' };
+    icon.textContent = icons[type] || '✓';
+    icon.className   = `toast-icon ${type}`;
+    prog.style.background = cols[type] || cols.success;
+    // reset progress animation
+    prog.style.animation = 'none';
+    prog.offsetHeight; // reflow
+    prog.style.animation = '';
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2400);
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2600);
   }
 
   /* ── Filter mods ── */
@@ -3124,6 +3198,85 @@
       document.body.style.overflow = '';
     }
   });
+
+  /* ── Magnetic buttons ── */
+  (function() {
+    const STRENGTH = 0.38;
+    const RADIUS   = 90;
+
+    document.querySelectorAll('.btn, #themeToggle, .ip-copy, .filter-btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r  = btn.getBoundingClientRect();
+        const cx = r.left + r.width  / 2;
+        const cy = r.top  + r.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist < RADIUS) {
+          const pull = (1 - dist / RADIUS) * STRENGTH;
+          btn.style.transform = `translate(${dx * pull}px, ${dy * pull}px)`;
+        }
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transition = 'transform .5s cubic-bezier(.16,1,.3,1), box-shadow .2s, border-color .2s, background .2s';
+        btn.style.transform  = '';
+        setTimeout(() => btn.style.transition = '', 500);
+      });
+      btn.addEventListener('mouseenter', () => {
+        btn.style.transition = 'transform .1s ease, box-shadow .2s, border-color .2s, background .2s';
+      });
+    });
+  })();
+
+  /* ── Section h2 letter reveal ── */
+  (function() {
+    document.querySelectorAll('h2').forEach(h => {
+      // Оборачиваем каждый текстовый узел и span
+      h.childNodes.forEach(node => {
+        if (node.nodeType === 3) { // текст
+          const wrap = document.createElement('span');
+          wrap.className = 'reveal-word';
+          const chars = node.textContent.split('').map(ch => {
+            const s = document.createElement('span');
+            s.className = 'reveal-char';
+            s.textContent = ch === ' ' ? '\u00A0' : ch;
+            return s;
+          });
+          chars.forEach(c => wrap.appendChild(c));
+          node.replaceWith(wrap);
+        } else if (node.nodeType === 1) { // span
+          const wrap = document.createElement('span');
+          wrap.className = 'reveal-word';
+          wrap.style.display = 'inline-block';
+          const chars = node.textContent.split('').map(ch => {
+            const s = document.createElement('span');
+            s.className = 'reveal-char';
+            s.style.color = 'inherit';
+            s.textContent = ch === ' ' ? '\u00A0' : ch;
+            return s;
+          });
+          chars.forEach(c => wrap.appendChild(c));
+          // копируем стиль span
+          wrap.style.cssText = node.style.cssText;
+          if (node.className) wrap.classList.add(...node.className.split(' '));
+          node.replaceWith(wrap);
+        }
+      });
+    });
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const chars = e.target.querySelectorAll('.reveal-char');
+        chars.forEach((c, i) => {
+          setTimeout(() => c.classList.add('visible'), i * 35);
+        });
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('h2').forEach(h => io.observe(h));
+  })();
 </script>
 </body>
 </html>
