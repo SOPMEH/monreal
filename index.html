@@ -502,6 +502,20 @@
       font-size: .62rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
       background: rgba(26,122,60,.2); color: var(--accent3); border: 1px solid rgba(34,204,102,.3); letter-spacing: .06em;
     }
+    .new-badge {
+      position: absolute; top: 10px; left: 10px;
+      font-size: .62rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+      background: rgba(255,215,0,.12); color: #FFD740; border: 1px solid rgba(255,215,0,.35);
+      letter-spacing: .08em; animation: newBadgePulse 2.4s ease-in-out infinite;
+    }
+    @keyframes newBadgePulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
+      50%      { box-shadow: 0 0 6px 2px rgba(255,215,0,.18); }
+    }
+    .filter-btn-new { border-color: rgba(255,215,0,.3) !important; color: var(--yellow2); }
+    .filter-btn-new:hover, .filter-btn-new.active {
+      background: rgba(255,215,0,.14) !important; border-color: rgba(255,215,0,.55) !important; color: #FFD740 !important;
+    }
 
     /* ── Mod links ── */
     .mod-link {
@@ -1511,7 +1525,6 @@
     <li><a href="#download">Скачать</a></li>
     <li><a href="#mods">Моды</a></li>
     <li><a href="#gallery">Галерея</a></li>
-    <li><a href="#mechanics">Механики</a></li>
     <li><a href="#discord">Discord</a></li>
     <li><a href="#fame">Слава</a></li>
     <li><a href="#events">События</a></li>
@@ -1538,7 +1551,6 @@
   <a href="#download"  onclick="closeMenu()">⬇ Скачать модпак</a>
   <a href="#mods"      onclick="closeMenu()">🧩 Список модов</a>
   <a href="#gallery"   onclick="closeMenu()">📸 Галерея</a>
-  <a href="#mechanics" onclick="closeMenu()">⚙️ Механики</a>
   <a href="#discord"   onclick="closeMenu()">💬 Discord</a>
   <a href="#fame"      onclick="closeMenu()">⭐ Стена Славы</a>
   <a href="#changelog" onclick="closeMenu()">📰 Новости</a>
@@ -1638,6 +1650,7 @@
 
   <div class="mods-filter">
     <button class="filter-btn active" onclick="filterMods('all',this)">Все</button>
+    <button class="filter-btn filter-btn-new" onclick="filterMods('new',this)">✦ Новое</button>
     <button class="filter-btn" onclick="filterMods('required',this)">Обязательные</button>
     <button class="filter-btn" onclick="filterMods('perf',this)">Производительность</button>
     <button class="filter-btn" onclick="filterMods('visual',this)">Визуал</button>
@@ -1648,6 +1661,28 @@
   </div>
 
   <div class="mods-grid" id="modsGrid">
+
+    <!-- НОВЫЕ МОДЫ -->
+    <div class="mod-card" data-tags="required,custom" data-added="2026-04-20" data-url="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-shop-1.0.0.jar" data-link-type="github">
+      <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>
+      <span class="new-badge">НОВОЕ</span>
+      <div class="mod-icon">🛒</div>
+      <div class="mod-info">
+        <div class="mod-name">MONREAL Shop</div>
+        <div class="mod-desc">Серверный магазин — покупай особые предметы за Points. Первый товар: Страховка — сохраняет все вещи и опыт при смерти (одноразовая, 5 000 pts).</div>
+        <div class="mod-tags"><span class="tag tag-custom">Кастомный</span><span class="tag tag-lib">Обязательный</span></div>
+      </div>
+    </div>
+
+    <div class="mod-card" data-tags="qol,world" data-added="2026-04-20" data-url="https://modrinth.com/mod/treeharvester">
+      <span class="new-badge">НОВОЕ</span>
+      <div class="mod-icon">🪓</div>
+      <div class="mod-info">
+        <div class="mod-name">Tree Harvester</div>
+        <div class="mod-desc">Срубай целое дерево одним ударом — держи Shift и сноси всё дерево сразу. Работает с любыми деревьями в любом биоме.</div>
+        <div class="mod-tags"><span class="tag tag-qol">QoL</span><span class="tag tag-world">Мир</span></div>
+      </div>
+    </div>
 
     <!-- КАСТОМНЫЕ -->
     <div class="mod-card" data-tags="required,custom" data-url="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-marketplace-1.0.0.jar" data-link-type="github">
@@ -2093,68 +2128,6 @@
         <div class="mod-desc">Просмотр рецептов крафта и способов получения любого предмета прямо в игре. Нажми R на предмет чтобы узнать рецепт.</div>
         <div class="mod-tags"><span class="tag tag-qol">QoL</span></div>
       </div>
-    </div>
-
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ── Mechanics ─────────────────────────────────────────────────── -->
-<section id="mechanics">
-  <div class="section-label">Геймплей</div>
-  <h2>Механики <span>сервера</span></h2>
-  <p class="section-desc">Уникальные фичи которые делают MONREAL особенным — не просто ванилла.</p>
-
-  <div class="mechanics-grid">
-
-    <div class="mechanic-card">
-      <span class="mechanic-icon">🔐</span>
-      <div class="mechanic-name">Авторизация</div>
-      <div class="mechanic-desc">Красивый кастомный экран входа при подключении. Регистрация по паролю, защита аккаунта, смена пароля командой. Работает с любым типом аккаунта.</div>
-      <span class="mechanic-tag">КАСТОМНЫЙ МОД</span>
-    </div>
-
-<div class="mechanic-card">
-      <span class="mechanic-icon">🎙️</span>
-      <div class="mechanic-name">Голосовой чат</div>
-      <div class="mechanic-desc">Пространственный голосовой чат — слышишь только тех кто рядом. Чем дальше игрок, тем тише его голос. Нажми V для настройки.</div>
-      <span class="mechanic-tag">SIMPLE VOICE CHAT</span>
-    </div>
-
-    <div class="mechanic-card">
-      <span class="mechanic-icon">⛏️</span>
-      <div class="mechanic-name">VeinMiner</div>
-      <div class="mechanic-desc">Зачаруй инструмент на "Vein Miner" и добывай всю жилу руды одним ударом. Держи Ctrl при добыче — мгновенно очищает всю жилу.</div>
-      <span class="mechanic-tag">VEINMINER</span>
-    </div>
-
-    <div class="mechanic-card">
-      <span class="mechanic-icon">🦅</span>
-      <div class="mechanic-name">Элитра в отдельном слоте</div>
-      <div class="mechanic-desc">Элитра надевается в специальный слот — нагрудник остаётся на месте. Летай в полной броне без компромиссов между защитой и полётом.</div>
-      <span class="mechanic-tag">ELYTRA TRINKET</span>
-    </div>
-
-    <div class="mechanic-card">
-      <span class="mechanic-icon">🌙</span>
-      <div class="mechanic-name">Голосование за ночь</div>
-      <div class="mechanic-desc">Не нужно ждать пока все лягут спать — достаточно большинства. Ложись в кровать и ночь пропустится даже если другие игроки не спят.</div>
-      <span class="mechanic-tag">SERVRSLEEP</span>
-    </div>
-
-    <div class="mechanic-card">
-      <span class="mechanic-icon">🪑</span>
-      <div class="mechanic-name">Сидеть на блоках</div>
-      <div class="mechanic-desc">Правый клик по ступеньке или слябу — и твой персонаж сядет. Маленькая деталь которая делает игру живее и уютнее.</div>
-      <span class="mechanic-tag">SIT</span>
-    </div>
-
-    <div class="mechanic-card">
-      <span class="mechanic-icon">💎</span>
-      <div class="mechanic-name">Кастомные узоры</div>
-      <div class="mechanic-desc">Узоры брони теперь на элитре, инструментах, и светятся в темноте. Выгляди уникально — комбинируй узоры и создавай свой стиль.</div>
-      <span class="mechanic-tag">TRIMS</span>
     </div>
 
   </div>
@@ -2702,9 +2675,16 @@
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const query = (document.getElementById('modsSearch')?.value || '').toLowerCase();
+    const now = Date.now();
     document.querySelectorAll('.mod-card').forEach(card => {
       const tags = card.dataset.tags || '';
-      const matchTag  = tag === 'all' || tags.includes(tag);
+      let matchTag;
+      if (tag === 'new') {
+        const added = card.dataset.added;
+        matchTag = !!added && (now - new Date(added).getTime()) <= 30 * 86400000;
+      } else {
+        matchTag = tag === 'all' || tags.includes(tag);
+      }
       const name = (card.querySelector('.mod-name')?.textContent || '').toLowerCase();
       const desc = (card.querySelector('.mod-desc')?.textContent || '').toLowerCase();
       const matchSearch = !query || name.includes(query) || desc.includes(query);
