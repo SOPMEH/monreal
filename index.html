@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="ru"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MONREAL — Minecraft Server</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1511,7 +1510,7 @@
   <div class="player-modal-card">
     <div class="modal-shine"></div>
     <button class="modal-close" onclick="closePlayerModal()">✕</button>
-    <img class="modal-avatar" id="modalAvatar" src="" alt="" />
+    <img class="modal-avatar" id="modalAvatar" src="" alt="">
     <div class="modal-name" id="modalName"></div>
     <span class="modal-role" id="modalRole"></span>
     <div class="modal-desc" id="modalDesc"></div>
@@ -1548,14 +1547,14 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#download"  onclick="closeMenu()">⬇ Скачать модпак</a>
-  <a href="#mods"      onclick="closeMenu()">🧩 Список модов</a>
-  <a href="#gallery"   onclick="closeMenu()">📸 Галерея</a>
-  <a href="#discord"   onclick="closeMenu()">💬 Discord</a>
-  <a href="#fame"      onclick="closeMenu()">⭐ Стена Славы</a>
+  <a href="#download" onclick="closeMenu()">⬇ Скачать модпак</a>
+  <a href="#mods" onclick="closeMenu()">🧩 Список модов</a>
+  <a href="#gallery" onclick="closeMenu()">📸 Галерея</a>
+  <a href="#discord" onclick="closeMenu()">💬 Discord</a>
+  <a href="#fame" onclick="closeMenu()">⭐ Стена Славы</a>
   <a href="#changelog" onclick="closeMenu()">📰 Новости</a>
-  <a href="#faq"       onclick="closeMenu()">❓ FAQ</a>
-  <a href="#connect"   onclick="closeMenu()">🔗 IP сервера</a>
+  <a href="#faq" onclick="closeMenu()">❓ FAQ</a>
+  <a href="#connect" onclick="closeMenu()">🔗 IP сервера</a>
 </div>
 
 <!-- ── Hero ─────────────────────────────────────────────────────── -->
@@ -1601,8 +1600,7 @@
       </div>
     </div>
     <div class="download-actions">
-      <a href="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-1.4.0.mrpack"
-         class="btn btn-gold" style="justify-content:center;" target="_blank" rel="noopener">
+      <a href="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-1.4.0.mrpack" class="btn btn-gold" style="justify-content:center;" target="_blank" rel="noopener">
         ⬇&nbsp; Скачать .mrpack
       </a>
       <a href="#mods" class="btn btn-outline" style="justify-content:center;font-size:.82rem;">
@@ -1645,7 +1643,7 @@
 
   <div class="mods-search-wrap">
     <span class="mods-search-icon">🔍</span>
-    <input class="mods-search" id="modsSearch" type="text" placeholder="Поиск по названию или описанию..." oninput="searchMods(this.value)" />
+    <input class="mods-search" id="modsSearch" type="text" placeholder="Поиск по названию или описанию..." oninput="searchMods(this.value)">
   </div>
 
   <div class="mods-filter">
@@ -1661,21 +1659,17 @@
   </div>
 
   <div class="mods-grid" id="modsGrid">
-
-    <!-- НОВЫЕ МОДЫ -->
     <div class="mod-card" data-tags="required,custom" data-added="2026-04-20" data-url="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-shop-1.0.0.jar" data-link-type="github">
       <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>
-      <span class="new-badge">НОВОЕ</span>
       <div class="mod-icon">🛒</div>
       <div class="mod-info">
         <div class="mod-name">MONREAL Shop</div>
         <div class="mod-desc">Серверный магазин — покупай особые предметы за Points. Первый товар: Страховка — сохраняет все вещи и опыт при смерти (одноразовая, 5 000 pts).</div>
-        <div class="mod-tags"><span class="tag tag-custom">Кастомный</span><span class="tag tag-lib">Обязательный</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span><span class="tag tag-custom">Кастомный</span></div>
       </div>
     </div>
 
     <div class="mod-card" data-tags="qol,world" data-added="2026-04-20" data-url="https://modrinth.com/mod/treeharvester">
-      <span class="new-badge">НОВОЕ</span>
       <div class="mod-icon">🪓</div>
       <div class="mod-info">
         <div class="mod-name">Tree Harvester</div>
@@ -1684,14 +1678,13 @@
       </div>
     </div>
 
-    <!-- КАСТОМНЫЕ -->
     <div class="mod-card" data-tags="required,custom" data-url="https://github.com/SOPMEH/monreal/releases/download/v1.0.0/monreal-marketplace-1.0.0.jar" data-link-type="github">
       <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>
       <div class="mod-icon">🏪</div>
       <div class="mod-info">
         <div class="mod-name">MONREAL Marketplace</div>
         <div class="mod-desc">Торговая площадка — открывай свой магазин, выставляй товары, покупай у других игроков и оставляй отзывы.</div>
-        <div class="mod-tags"><span class="tag tag-custom">Кастомный</span><span class="tag tag-lib">Обязательный</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span><span class="tag tag-custom">Кастомный</span></div>
       </div>
     </div>
 
@@ -1701,7 +1694,7 @@
       <div class="mod-info">
         <div class="mod-name">MONREAL Wallet</div>
         <div class="mod-desc">Внутрисерверная валюта — баланс, переводы между игроками и ежедневный бонус прямо в инвентаре.</div>
-        <div class="mod-tags"><span class="tag tag-custom">Кастомный</span><span class="tag tag-lib">Обязательный</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span><span class="tag tag-custom">Кастомный</span></div>
       </div>
     </div>
 
@@ -1711,18 +1704,17 @@
       <div class="mod-info">
         <div class="mod-name">MONREAL Auth</div>
         <div class="mod-desc">Кастомная авторизация с красивым UI — регистрация и вход по паролю при входе на сервер.</div>
-        <div class="mod-tags"><span class="tag tag-custom">Кастомный</span><span class="tag tag-lib">Обязательный</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span><span class="tag tag-custom">Кастомный</span></div>
       </div>
     </div>
 
-    <!-- ОБЯЗАТЕЛЬНЫЕ -->
     <div class="mod-card" data-tags="required" data-url="https://modrinth.com/mod/fabric-api">
       <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>
       <div class="mod-icon">⚙️</div>
       <div class="mod-info">
         <div class="mod-name">Fabric API</div>
         <div class="mod-desc">Основная библиотека Fabric. Без неё не работает ни один мод из сборки.</div>
-        <div class="mod-tags"><span class="tag tag-lib">Библиотека</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span></div>
       </div>
     </div>
 
@@ -1732,11 +1724,10 @@
       <div class="mod-info">
         <div class="mod-name">Simple Voice Chat</div>
         <div class="mod-desc">Голосовой чат с пространственным звуком — слышишь только игроков рядом с тобой.</div>
-        <div class="mod-tags"><span class="tag tag-social">Социальный</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span><span class="tag tag-social">Социальный</span></div>
       </div>
     </div>
 
-    <!-- ПРОИЗВОДИТЕЛЬНОСТЬ -->
     <div class="mod-card" data-tags="perf" data-url="https://modrinth.com/mod/sodium">
       <div class="mod-icon">🚀</div>
       <div class="mod-info">
@@ -1818,7 +1809,6 @@
       </div>
     </div>
 
-    <!-- ВИЗУАЛ -->
     <div class="mod-card" data-tags="visual" data-url="https://modrinth.com/mod/iris">
       <div class="mod-icon">🌅</div>
       <div class="mod-info">
@@ -1860,7 +1850,7 @@
       <div class="mod-info">
         <div class="mod-name">Elytra Trims</div>
         <div class="mod-desc">Накладывает узоры брони на элитру — элитра теперь выглядит стильно.</div>
-        <div class="mod-tags"><span class="tag tag-visual">Визуал</span></div>
+        <div class="mod-tags"><span class="tag tag-visual">Визуал</span><span class="tag tag-qol">QoL</span></div>
       </div>
     </div>
 
@@ -1882,7 +1872,6 @@
       </div>
     </div>
 
-    <!-- МИР -->
     <div class="mod-card" data-tags="world" data-url="https://modrinth.com/mod/dungeons-and-taverns">
       <div class="mod-icon">🏰</div>
       <div class="mod-info">
@@ -1937,7 +1926,6 @@
       </div>
     </div>
 
-    <!-- QOL -->
     <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/veinminer">
       <div class="mod-icon">⛏️</div>
       <div class="mod-info">
@@ -2037,7 +2025,6 @@
       </div>
     </div>
 
-    <!-- СОЦИАЛЬНЫЕ -->
     <div class="mod-card" data-tags="social" data-url="https://modrinth.com/mod/chat-heads">
       <div class="mod-icon">💬</div>
       <div class="mod-info">
@@ -2061,7 +2048,7 @@
       <div class="mod-info">
         <div class="mod-name">Melody</div>
         <div class="mod-desc">Музыкальный мод — дополнительные треки и управление музыкой в игре.</div>
-        <div class="mod-tags"><span class="tag tag-social">Социальный</span></div>
+        <div class="mod-tags"><span class="tag tag-social">Социальный</span><span class="tag tag-visual">Визуал</span></div>
       </div>
     </div>
 
@@ -2080,7 +2067,7 @@
       <div class="mod-info">
         <div class="mod-name">MONREAL Bank</div>
         <div class="mod-desc">Кастомный банк ресурсов — продавай и покупай предметы за Points. История транзакций и кнопка прямо в инвентаре.</div>
-        <div class="mod-tags"><span class="tag tag-custom">Кастомный</span><span class="tag tag-lib">Обязательный</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span><span class="tag tag-custom">Кастомный</span></div>
       </div>
     </div>
 
@@ -2090,7 +2077,7 @@
       <div class="mod-info">
         <div class="mod-name">MONREAL Jobs</div>
         <div class="mod-desc">Система профессий — выбери специализацию (шахтёр, фермер, лесоруб, охотник) и получай бонусы до +300% при продаже соответствующих предметов в банке. 6 звёздных уровней.</div>
-        <div class="mod-tags"><span class="tag tag-custom">Кастомный</span><span class="tag tag-lib">Обязательный</span></div>
+        <div class="mod-tags"><span class="tag tag-lib">Обязательный</span><span class="tag tag-custom">Кастомный</span></div>
       </div>
     </div>
 
@@ -2111,7 +2098,6 @@
         <div class="mod-tags"><span class="tag tag-qol">QoL</span></div>
       </div>
     </div>
-
 
     <div class="mod-card" data-tags="qol" data-url="https://modrinth.com/mod/jei">
       <div class="mod-icon">📖</div>
@@ -2217,18 +2203,13 @@
         <div class="discord-feature"><span>🎉</span><span>Анонсы ивентов и конкурсов</span></div>
       </div>
       <a href="https://discord.gg/RuScQn7d" target="_blank" rel="noopener" class="discord-btn" id="discordBtn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.054a19.97 19.97 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.054a19.97 19.97 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"></path></svg>
         Войти в Discord
       </a>
     </div>
 
     <div class="discord-widget-wrap">
-      <iframe id="discordWidget"
-        src="https://discord.com/widget?id=1489377834991354016&theme=dark"
-        width="340" height="500"
-        allowtransparency="true"
-        frameborder="0"
-        sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+      <iframe id="discordWidget" src="https://discord.com/widget?id=1489377834991354016&amp;theme=dark" width="340" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
       </iframe>
     </div>
   </div>
@@ -2245,17 +2226,10 @@
   <div class="fame-grid">
 
     <!-- SOPMEHUA -->
-    <div class="fame-card first-place"
-      data-name="SOPMEHUA" data-role="Создатель &amp; Администратор"
-      data-desc="Основал MONREAL и вложил душу в каждую деталь сервера. Делает всё, чтобы на сервере было уютно и интересно — от настройки модов до создания кастомных механик."
-      data-badges="👑 Основатель|fame-badge-green,⚙️ Разработчик|fame-badge-gold,🛡️ Администратор|fame-badge-blue"
-      onclick="openPlayerModal(this)">
+    <div class="fame-card first-place" data-name="SOPMEHUA" data-role="Создатель &amp; Администратор" data-desc="Основал MONREAL и вложил душу в каждую деталь сервера. Делает всё, чтобы на сервере было уютно и интересно — от настройки модов до создания кастомных механик." data-badges="👑 Основатель|fame-badge-green,⚙️ Разработчик|fame-badge-gold,🛡️ Администратор|fame-badge-blue" onclick="openPlayerModal(this)">
       <div class="fame-rank">✦ ОСНОВАТЕЛЬ</div>
       <div class="fame-avatar-wrap">
-        <img class="fame-avatar"
-             src="https://mc-heads.net/avatar/SOPMEHUA/128"
-             alt="SOPMEHUA"
-             onerror="this.src='https://minotar.net/avatar/SOPMEHUA/128'" />
+        <img class="fame-avatar" src="https://mc-heads.net/avatar/SOPMEHUA/128" alt="SOPMEHUA" onerror="this.src='https://minotar.net/avatar/SOPMEHUA/128'">
       </div>
       <div class="fame-name">SOPMEHUA</div>
       <div class="fame-title">Создатель &amp; Администратор</div>
@@ -2270,17 +2244,10 @@
     </div>
 
     <!-- Necront -->
-    <div class="fame-card"
-      data-name="Necront" data-role="Бесстрашный Воин"
-      data-desc="Бизнесмен и воин в одном лице. Вошёл в историю сервера, пережив ивент набега в полном одиночестве — туда, куда другие не рискнули зайти."
-      data-badges="⚔️ Воин|fame-badge-red,💰 Бизнесмен|fame-badge-gold,💀 Выжил в набеге|fame-badge-purple"
-      onclick="openPlayerModal(this)">
+    <div class="fame-card" data-name="Necront" data-role="Бесстрашный Воин" data-desc="Бизнесмен и воин в одном лице. Вошёл в историю сервера, пережив ивент набега в полном одиночестве — туда, куда другие не рискнули зайти." data-badges="⚔️ Воин|fame-badge-red,💰 Бизнесмен|fame-badge-gold,💀 Выжил в набеге|fame-badge-purple" onclick="openPlayerModal(this)">
       <div class="fame-rank">✦ ВЕТЕРАН</div>
       <div class="fame-avatar-wrap">
-        <img class="fame-avatar"
-             src="https://mc-heads.net/avatar/Necront/128"
-             alt="Necront"
-             onerror="this.src='https://minotar.net/avatar/Necront/128'" />
+        <img class="fame-avatar" src="https://mc-heads.net/avatar/Necront/128" alt="Necront" onerror="this.src='https://minotar.net/avatar/Necront/128'">
       </div>
       <div class="fame-name">Necront</div>
       <div class="fame-title">Бесстрашный Воин</div>
@@ -2295,17 +2262,10 @@
     </div>
 
     <!-- Jagermeister_999 -->
-    <div class="fame-card"
-      data-name="Jagermeister_999" data-role="Главная Звёздочка"
-      data-desc="Самая преданная душа сервера. Пережила инцидент со «сталкером», построила для сервера больше, чем кто-либо другой. Настоящее сердце MONREAL."
-      data-badges="⭐ Звёздочка|fame-badge-purple,🏗️ Строитель|fame-badge-green,👁️ Пережила сталкера|fame-badge-red"
-      onclick="openPlayerModal(this)">
+    <div class="fame-card" data-name="Jagermeister_999" data-role="Главная Звёздочка" data-desc="Самая преданная душа сервера. Пережила инцидент со «сталкером», построила для сервера больше, чем кто-либо другой. Настоящее сердце MONREAL." data-badges="⭐ Звёздочка|fame-badge-purple,🏗️ Строитель|fame-badge-green,👁️ Пережила сталкера|fame-badge-red" onclick="openPlayerModal(this)">
       <div class="fame-rank">✦ СТРОИТЕЛЬ</div>
       <div class="fame-avatar-wrap">
-        <img class="fame-avatar"
-             src="https://mc-heads.net/avatar/Jagermeister_999/128"
-             alt="Jagermeister_999"
-             onerror="this.src='https://minotar.net/avatar/Jagermeister_999/128'" />
+        <img class="fame-avatar" src="https://mc-heads.net/avatar/Jagermeister_999/128" alt="Jagermeister_999" onerror="this.src='https://minotar.net/avatar/Jagermeister_999/128'">
       </div>
       <div class="fame-name">Jagermeister_999</div>
       <div class="fame-title">Главная Звёздочка</div>
@@ -2332,23 +2292,23 @@
 
   <div class="gallery-grid">
     <div class="gallery-item" onclick="openLightbox(0)">
-      <img src="screenshots/screen1.jpg" alt="Библиотека под сакурой" loading="lazy" />
+      <img src="screenshots/screen1.jpg" alt="Библиотека под сакурой" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-caption">🌸 Библиотека под сакурой</span></div>
     </div>
     <div class="gallery-item" onclick="openLightbox(1)">
-      <img src="screenshots/screen2.jpg" alt="Ночная башня" loading="lazy" />
+      <img src="screenshots/screen2.jpg" alt="Ночная башня" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-caption">🌃 Ночная башня</span></div>
     </div>
     <div class="gallery-item" onclick="openLightbox(2)">
-      <img src="screenshots/screen3.jpg" alt="Закат над вишнёвым садом" loading="lazy" />
+      <img src="screenshots/screen3.jpg" alt="Закат над вишнёвым садом" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-caption">🌅 Закат над вишнёвым садом</span></div>
     </div>
     <div class="gallery-item" onclick="openLightbox(3)">
-      <img src="screenshots/screen4.jpg" alt="Усадьба на закате" loading="lazy" />
+      <img src="screenshots/screen4.jpg" alt="Усадьба на закате" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-caption">🏡 Усадьба на закате</span></div>
     </div>
     <div class="gallery-item" onclick="openLightbox(4)">
-      <img src="screenshots/screen5.jpg" alt="Пещерный сад сакуры" loading="lazy" />
+      <img src="screenshots/screen5.jpg" alt="Пещерный сад сакуры" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-caption">🍄 Пещерный сад сакуры</span></div>
     </div>
   </div>
@@ -2358,7 +2318,7 @@
 <div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <button class="lightbox-arrow lightbox-prev" onclick="lightboxNav(-1)">‹</button>
-  <img id="lightboxImg" src="" alt="" />
+  <img id="lightboxImg" src="" alt="">
   <button class="lightbox-arrow lightbox-next" onclick="lightboxNav(1)">›</button>
   <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
@@ -2387,12 +2347,23 @@
 <!-- ── Changelog ─────────────────────────────────────────────────── -->
 <section id="changelog">
   <div class="section-label">История сервера</div>
-  <h2>Обновления <span>& Новости</span></h2>
+  <h2>Обновления <span>&amp; Новости</span></h2>
   <p class="section-desc">Что происходило на сервере — версии, события, изменения.</p>
 
   <div class="timeline">
 
     <div class="timeline-item latest">
+      <div class="timeline-date"></div>
+      <div class="timeline-version">
+        MONREAL 1.4.1
+        <span class="version-badge">ОБНОВЛЕНИЕ</span>
+      </div>
+      <ul class="timeline-changes">
+        <li>Были добавлены моды на визуал и оптимизацию.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
       <div class="timeline-date">19 АПРЕЛЯ 2026</div>
       <div class="timeline-version">
         MONREAL 1.4.0 — Система работ
@@ -2412,7 +2383,7 @@
       <div class="timeline-date">19 АПРЕЛЯ 2026</div>
       <div class="timeline-version">
         MONREAL 1.3.0 — Торговая площадка
-        <span class="version-badge">КРУПНОЕ ОБНОВЛЕНИЕ</span>
+        <span class="version-badge new">КРУПНОЕ ОБНОВЛЕНИЕ</span>
       </div>
       <ul class="timeline-changes">
         <li>Добавлен кастомный мод <strong>MONREAL Marketplace</strong> — открывай магазин, выставляй товары, покупай у других игроков, оставляй отзывы</li>
@@ -2562,7 +2533,7 @@
   <p><strong>MONREAL</strong> · Fabric 1.21.11 · Vanilla+ SMP</p>
   <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
     <a class="share-tg" id="shareTg" href="#" target="_blank" rel="noopener">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.9l-2.965-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.963.659z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.9l-2.965-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.963.659z"></path></svg>
       Поделиться в Telegram
     </a>
     <div class="visit-counter">
@@ -2571,8 +2542,7 @@
   </div>
   <p style="margin-top:12px;color:#1A3D22;">Сделано с ❤️ для своих</p>
   <p style="margin-top:10px;">
-    <a href="admin.html" style="color:#1A3D22;font-size:.72rem;text-decoration:none;letter-spacing:.06em;opacity:.55;transition:opacity .2s;"
-       onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='.55'">⚙ admin</a>
+    <a href="admin.html" style="color:#1A3D22;font-size:.72rem;text-decoration:none;letter-spacing:.06em;opacity:.55;transition:opacity .2s;" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='.55'">⚙ admin</a>
   </p>
 </footer>
 
@@ -2580,7 +2550,7 @@
   <div class="toast-icon success" id="toastIcon">✓</div>
   <div class="toast-body">
     <div class="toast-title" id="toastTitle">Готово</div>
-    <div class="toast-sub"   id="toastText"></div>
+    <div class="toast-sub" id="toastText"></div>
   </div>
   <div class="toast-progress" id="toastProgress"></div>
 </div>
@@ -3451,5 +3421,6 @@
     document.querySelectorAll('h2').forEach(h => io.observe(h));
   })();
 </script>
-</body>
-</html>
+
+
+</body></html>
