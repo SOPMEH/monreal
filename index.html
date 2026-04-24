@@ -2769,6 +2769,22 @@
     });
   }
 
+  /* ── New badge: auto-inject for cards with data-added within 30 days ── */
+  (function() {
+    const now = Date.now();
+    document.querySelectorAll('.mod-card[data-added]').forEach(card => {
+      const added = card.dataset.added;
+      if (!added) return;
+      const age = now - new Date(added).getTime();
+      if (age <= 30 * 86400000 && !card.querySelector('.new-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'new-badge';
+        badge.textContent = 'НОВОЕ';
+        card.insertBefore(badge, card.firstChild);
+      }
+    });
+  })();
+
   /* ── Mod links ── */
   document.querySelectorAll('.mod-card[data-url]').forEach(card => {
     const url = card.dataset.url;
