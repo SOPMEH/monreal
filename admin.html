@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MONREAL Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #030805;
+      --bg2:     #060F09;
+      --card:    #0A160C;
+      --card2:   #0E1E11;
+      --border:  #122518;
+      --border2: #1C3D25;
+      --accent:  #1A7A3C;
+      --accent2: #145C2D;
+      --accent3: #2EAA56;
+      --gold:    #22CC66;
+      --gold2:   #44FF88;
+      --text:    #E0F0E5;
+      --text2:   #7AAA88;
+      --text3:   #3D6648;
+      --red:     #AA3333;
+      --red2:    #FF5555;
+      --yellow:  #C8A020;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Inputs ──────────────────────────────────────────────────────── */
+    input, textarea, select {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: .88rem;
+      padding: 9px 13px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent3); }
+    textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
+    select option { background: var(--card2); }
+    input[type="checkbox"] { width: auto; accent-color: var(--accent3); }
+
+    .field-label {
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--text2); margin-bottom: 6px;
+    }
+    .field-hint { font-size: .7rem; color: var(--text3); margin-top: 5px; line-height: 1.5; }
+    .form-group { display: flex; flex-direction: column; gap: 0; }
+    .form-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* ── Buttons ─────────────────────────────────────────────────────── */
+    .btn {
+      padding: 9px 20px; border-radius: 8px; border: 1px solid transparent;
+      font-family: inherit; font-size: .86rem; font-weight: 600;
+      cursor: pointer; transition: background .18s, border-color .18s, color .18s;
+    }
+    .btn-primary { background: var(--accent); border-color: var(--accent3); color: #fff; }
+    .btn-primary:hover { background: var(--accent3); }
+    .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+
+    .btn-ghost {
+      background: transparent; border-color: var(--border2); color: var(--text2);
+    }
+    .btn-ghost:hover { border-color: var(--text2); color: var(--text); }
+
+    .btn-danger {
+      background: rgba(170,51,51,.15); border-color: rgba(170,51,51,.4); color: var(--red2);
+    }
+    .btn-danger:hover { background: rgba(170,51,51,.3); }
+
+    .btn-add {
+      background: rgba(26,122,60,.18); border-color: var(--accent3); color: var(--gold);
+      font-size: .82rem; padding: 7px 16px;
+    }
+    .btn-add:hover { background: rgba(46,170,86,.3); }
+
+    .btn-sm { padding: 5px 12px; font-size: .76rem; }
+
+    .btn-publish {
+      background: var(--accent); border: 1px solid var(--accent3);
+      border-radius: 8px; color: #fff; font-family: inherit;
+      font-size: .86rem; font-weight: 700; cursor: pointer; padding: 9px 22px;
+      transition: background .18s, box-shadow .3s;
+    }
+    .btn-publish:hover   { background: var(--accent3); }
+    .btn-publish.glow    { box-shadow: 0 0 16px rgba(46,170,86,.5); }
+    .btn-publish:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* ── Login ───────────────────────────────────────────────────────── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse 55% 55% at 50% 50%, rgba(26,122,60,.07) 0%, transparent 70%);
+    }
+    .login-card {
+      width: 420px; background: var(--card);
+      border: 1px solid var(--border2); border-radius: 18px;
+      padding: 44px 40px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.65);
+    }
+    .login-logo  { text-align: center; font-size: 2.4rem; font-weight: 900; color: var(--gold); letter-spacing: -.03em; }
+    .login-sub   { text-align: center; font-size: .74rem; color: var(--text2); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 36px; }
+    .login-error { color: var(--red2); font-size: .8rem; margin-top: 12px; text-align: center; min-height: 18px; }
+
+    /* ── Dashboard shell ─────────────────────────────────────────────── */
+    #dashboard { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .admin-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 24px; background: var(--card);
+      border-bottom: 1px solid var(--border2);
+      position: sticky; top: 0; z-index: 200;
+    }
+    .admin-title  { font-size: .95rem; font-weight: 800; color: var(--gold); flex: 1; }
+    .admin-status { font-size: .75rem; color: var(--text2); }
+
+    .tab-bar {
+      display: flex; gap: 2px; padding: 10px 24px 0;
+      background: var(--card); border-bottom: 1px solid var(--border);
+      overflow-x: auto; flex-shrink: 0;
+    }
+    .tab-btn {
+      padding: 9px 18px; background: transparent; border: none;
+      border-bottom: 2px solid transparent; color: var(--text2);
+      font-family: inherit; font-size: .86rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: color .18s, border-color .18s; border-radius: 6px 6px 0 0;
+    }
+    .tab-btn:hover  { color: var(--text); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    .tab-pane { display: none; padding: 28px 24px; max-width: 1100px; width: 100%; margin: 0 auto; }
+    .tab-pane.active { display: block; }
+
+    /* ── Section header ──────────────────────────────────────────────── */
+    .sec-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 22px;
+    }
+    .sec-title  { font-size: 1.15rem; font-weight: 800; flex: 1; }
+    .sec-count  { font-size: .78rem; color: var(--text2); background: var(--card2);
+                  padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); }
+
+    /* ── Mod list ─────────────────────────────────────────────────────── */
+    .mod-list { display: flex; flex-direction: column; gap: 8px; }
+    .a-mod {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 11px 16px;
+      transition: border-color .18s;
+    }
+    .a-mod:hover { border-color: var(--border2); }
+    .a-mod-icon  { font-size: 1.5rem; width: 30px; text-align: center; flex-shrink: 0; }
+    .a-mod-info  { flex: 1; min-width: 0; }
+    .a-mod-name  { font-size: .9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .a-mod-meta  { font-size: .72rem; color: var(--text2); margin-top: 3px; }
+    .a-mod-acts  { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* Tag pills */
+    .pill {
+      display: inline-block; padding: 2px 7px; border-radius: 4px;
+      font-size: .66rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .04em; margin-right: 4px;
+    }
+    .p-required { background: rgba(200,160,32,.14); color: #C8A020; border: 1px solid rgba(200,160,32,.3); }
+    .p-custom   { background: rgba(46,170,86,.14);  color: #44FF88; border: 1px solid rgba(46,170,86,.3); }
+    .p-perf     { background: rgba(100,100,220,.14); color: #9999FF; border: 1px solid rgba(100,100,220,.3); }
+    .p-visual   { background: rgba(180,80,220,.14);  color: #CC88FF; border: 1px solid rgba(180,80,220,.3); }
+    .p-qol      { background: rgba(46,170,86,.12);   color: #66EE99; border: 1px solid rgba(46,170,86,.25); }
+    .p-social   { background: rgba(220,140,40,.14);  color: #FFAA44; border: 1px solid rgba(220,140,40,.3); }
+    .p-world    { background: rgba(40,180,180,.14);  color: #44FFEE; border: 1px solid rgba(40,180,180,.3); }
+    .p-new      { background: rgba(34,204,102,.12);  color: var(--gold2); border: 1px solid rgba(34,204,102,.3); }
+
+    /* Tags checkboxes */
+    .tags-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag-check { display: flex; align-items: center; gap: 7px; cursor: pointer; font-size: .84rem; }
+
+    /* ── Timeline list ─────────────────────────────────────────────── */
+    .tl-list { display: flex; flex-direction: column; gap: 12px; }
+    .a-tl {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 18px;
+      border-left: 3px solid transparent;
+    }
+    .a-tl.latest { border-left-color: var(--gold); }
+    .a-tl-head   { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+    .a-tl-info   { flex: 1; }
+    .a-tl-date   { font-size: .72rem; color: var(--text2); margin-bottom: 3px; }
+    .a-tl-title  { font-size: .92rem; font-weight: 700; }
+    .a-tl-badge  { font-size: .68rem; padding: 2px 8px; border-radius: 4px; margin-left: 8px;
+                   background: rgba(200,160,32,.14); color: var(--yellow); border: 1px solid rgba(200,160,32,.3); }
+    .a-tl-changes { list-style: none; padding: 0; }
+    .a-tl-changes li {
+      font-size: .79rem; color: var(--text2); padding: 2px 0 2px 14px; position: relative;
+    }
+    .a-tl-changes li::before { content: '▸'; position: absolute; left: 0; color: var(--accent3); }
+
+    /* ── Gallery grid ──────────────────────────────────────────────── */
+    .gal-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 12px;
+    }
+    .a-gal {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    }
+    .a-gal-img {
+      width: 100%; aspect-ratio: 16/9; object-fit: cover;
+      display: block; background: var(--bg2);
+    }
+    .a-gal-no-img {
+      width: 100%; aspect-ratio: 16/9; background: var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: var(--text3);
+    }
+    .a-gal-cap  { padding: 9px 12px 6px; font-size: .77rem; color: var(--text2); }
+    .a-gal-acts { display: flex; gap: 6px; padding: 0 12px 10px; }
+    .gal-add {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--card); border: 2px dashed var(--border2);
+      border-radius: 10px; aspect-ratio: 16/9; font-size: 2.4rem;
+      color: var(--text3); cursor: pointer;
+      transition: border-color .18s, color .18s;
+    }
+    .gal-add:hover { border-color: var(--accent3); color: var(--gold); }
+
+    /* ── Download form ─────────────────────────────────────────────── */
+    .dl-form { display: flex; flex-direction: column; gap: 18px; max-width: 620px; }
+
+    /* ── Changes editor ────────────────────────────────────────────── */
+    .changes-list { display: flex; flex-direction: column; gap: 7px; }
+    .change-row   { display: flex; gap: 8px; align-items: center; }
+    .change-row input { flex: 1; }
+    .btn-remove {
+      padding: 7px 10px; background: rgba(170,51,51,.14);
+      border: 1px solid rgba(170,51,51,.3); border-radius: 6px;
+      color: var(--red); font-size: .8rem; cursor: pointer; flex-shrink: 0;
+    }
+    .btn-remove:hover { background: rgba(170,51,51,.28); }
+
+    /* ── Modal ─────────────────────────────────────────────────────── */
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(0,0,0,.78);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal-card {
+      background: var(--card); border: 1px solid var(--border2);
+      border-radius: 16px; width: 580px;
+      max-width: calc(100vw - 32px); max-height: calc(100vh - 48px);
+      overflow-y: auto; padding: 30px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.7);
+      transform: scale(.94) translateY(16px);
+      transition: transform .22s;
+    }
+    .modal-bg.open .modal-card { transform: scale(1) translateY(0); }
+    .modal-title   { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin-bottom: 24px; }
+    .modal-fields  { display: flex; flex-direction: column; gap: 16px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 26px; justify-content: flex-end; }
+
+    /* ── Toast ─────────────────────────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 22px; right: 22px;
+      background: var(--card2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 13px 20px; font-size: .85rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,.45); z-index: 2000;
+      transform: translateY(70px); opacity: 0;
+      transition: transform .28s, opacity .28s;
+    }
+    .toast.show   { transform: translateY(0); opacity: 1; }
+    .toast.ok     { border-color: var(--accent3); color: var(--gold2); }
+    .toast.err    { border-color: rgba(170,51,51,.5); color: var(--red2); }
+    .toast.info   { border-color: var(--border2); color: var(--text2); }
+
+    /* ── Spinner ───────────────────────────────────────────────────── */
+    .spin {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid var(--border2); border-top-color: var(--accent3);
+      border-radius: 50%; animation: spinning .65s linear infinite; vertical-align: middle;
+    }
+    @keyframes spinning { to { transform: rotate(360deg); } }
+
+    /* ── Empty state ───────────────────────────────────────────────── */
+    .empty { text-align: center; padding: 48px 0; color: var(--text3); font-size: .9rem; }
+
+    /* ── Scrollbar ─────────────────────────────────────────────────── */
+    ::-webkit-scrollbar       { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LOGIN
+═══════════════════════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">🛡️ ADMIN</div>
+    <div class="login-sub">MONREAL Server Panel</div>
+
+    <div style="margin-bottom:14px;">
+      <div class="field-label" style="margin-bottom:6px;">GitHub Personal Access Token</div>
+      <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"
+             onkeydown="if(event.key==='Enter') login()" />
+      <div class="field-hint">
+        Токен с правом <strong style="color:var(--gold)">repo</strong> (Contents: read & write).<br>
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=MONREAL+Admin"
+           target="_blank" rel="noopener" style="color:var(--gold);">Создать токен →</a>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="loginBtn" onclick="login()" style="width:100%;margin-top:8px;">
+      Войти
+    </button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DASHBOARD
+═══════════════════════════════════════════════════════════════ -->
+<div id="dashboard" style="display:none; flex-direction:column; min-height:100vh;">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="admin-title">🛡️ MONREAL ADMIN</div>
+    <span class="admin-status" id="statusText">Загрузка...</span>
+    <button class="btn-publish" id="publishBtn" onclick="publish()">🚀 Опубликовать</button>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">Выйти</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('mods',this)">🧩 Моды</button>
+    <button class="tab-btn" onclick="switchTab('changelog',this)">📰 Новости</button>
+    <button class="tab-btn" onclick="switchTab('gallery',this)">📸 Скриншоты</button>
+    <button class="tab-btn" onclick="switchTab('download',this)">📦 Сборка</button>
+  </div>
+
+  <!-- ── MODS ── -->
+  <div class="tab-pane active" id="tab-mods">
+    <div class="sec-header">
+      <div class="sec-title">Моды</div>
+      <span class="sec-count" id="modCount">0 модов</span>
+      <button class="btn btn-add" onclick="openModModal(-1)">+ Добавить мод</button>
+    </div>
+    <div class="mod-list" id="modList"><div class="empty">Загрузка...</div></div>
+  </div>
+
+  <!-- ── CHANGELOG ── -->
+  <div class="tab-pane" id="tab-changelog">
+    <div class="sec-header">
+      <div class="sec-title">Новости & Обновления</div>
+      <button class="btn btn-add" onclick="openChangelogModal(-1)">+ Добавить запись</button>
+    </div>
+    <div class="tl-list" id="tlList"><div class="empty">Загрузка...</div></div>
+  </div>
+
+  <!-- ── GALLERY ── -->
+  <div class="tab-pane" id="tab-gallery">
+    <div class="sec-header">
+      <div class="sec-title">Скриншоты</div>
+      <span class="sec-count" id="galCount">0 скриншотов</span>
+    </div>
+    <div class="gal-grid" id="galGrid"></div>
+  </div>
+
+  <!-- ── DOWNLOAD ── -->
+  <div class="tab-pane" id="tab-download">
+    <div class="sec-header">
+      <div class="sec-title">Информация о сборке</div>
+    </div>
+    <div class="dl-form" id="dlForm"><div class="empty">Загрузка...</div></div>
+  </div>
+
+</div><!-- /dashboard -->
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="modalBg" onclick="onModalBgClick(event)">
+  <div class="modal-card">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-fields" id="modalFields"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Отмена</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveModal()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCRIPT
+═══════════════════════════════════════════════════════════════ -->
+<script>
+// ── Config ──────────────────────────────────────────────────────────────────
+const OWNER = 'SOPMEH';
+const REPO  = 'monreal';
+const PATH  = 'index.html';
+const API   = 'https://api.github.com';
+
+// ── State ────────────────────────────────────────────────────────────────────
+let token     = '';
+let fileSha   = '';
+let parsedDoc = null;
+let mods      = [];
+let changelog = [];
+let gallery   = [];
+let dlInfo    = {};
+let dirty     = false;
+let modalMode = '';   // 'mod' | 'changelog' | 'gallery'
+let modalIdx  = -1;
+
+// ── Tag / Badge definitions ──────────────────────────────────────────────────
+const TAGS = {
+  required: { cls:'tag-lib',    label:'Обязательный',    pill:'p-required' },
+  custom:   { cls:'tag-custom', label:'Кастомный',       pill:'p-custom'   },
+  perf:     { cls:'tag-perf',   label:'Производительность', pill:'p-perf'  },
+  visual:   { cls:'tag-visual', label:'Визуал',          pill:'p-visual'   },
+  qol:      { cls:'tag-qol',    label:'QoL',             pill:'p-qol'      },
+  social:   { cls:'tag-social', label:'Социальный',      pill:'p-social'   },
+  world:    { cls:'tag-world',  label:'Мир',             pill:'p-world'    },
+};
+const BADGE_MAP = {
+  'major':  'КРУПНОЕ ОБНОВЛЕНИЕ',
+  'update': 'ОБНОВЛЕНИЕ',
+  'hotfix': 'ХОТФИКС',
+  'event':  'ИВЕНТ',
+  'first':  'ПЕРВАЯ ВЕРСИЯ',
+};
+
+// ═══════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════
+async function login() {
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
+  token = document.getElementById('tokenInput').value.trim();
+  if (!token) { err.textContent = 'Введи токен'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Проверяю...';
+  err.textContent = '';
+
+  try {
+    const u = await ghFetch('/user');
+    if (!u.ok) throw new Error('Неверный токен или нет доступа');
+    const user = await u.json();
+
+    sessionStorage.setItem('gh_token', token);
+    document.getElementById('dashboard').style.display = 'flex';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('statusText').textContent = '@' + user.login;
+
+    await loadFile();
+  } catch(e) {
+    err.textContent = e.message;
+    token = '';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Войти';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('gh_token');
+  token = ''; fileSha = ''; parsedDoc = null;
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('loginError').textContent = '';
+}
+
+// Auto-restore token
+window.addEventListener('load', () => {
+  const t = sessionStorage.getItem('gh_token');
+  if (t) document.getElementById('tokenInput').value = t;
+});
+
+// ═══════════════════════════════════════════════════════════════
+// GITHUB API
+// ═══════════════════════════════════════════════════════════════
+function ghFetch(path, opts = {}) {
+  return fetch(API + path, {
+    ...opts,
+    headers: {
+      'Authorization': 'token ' + token,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+}
+
+async function loadFile() {
+  setStatus('⏳ Загружаю index.html...');
+  try {
+    const res  = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${PATH}`);
+    if (!res.ok) throw new Error('Не удалось загрузить файл: ' + res.status);
+    const data = await res.json();
+    fileSha    = data.sha;
+    const html = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+    parsedDoc  = new DOMParser().parseFromString(html, 'text/html');
+    extractAll();
+    renderAll();
+    setStatus(`✓ Загружено · SHA ${fileSha.slice(0,7)}`);
+  } catch(e) {
+    setStatus('❌ ' + e.message);
+    toast(e.message, 'err');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EXTRACT DATA FROM PARSED HTML
+// ═══════════════════════════════════════════════════════════════
+function extractAll() {
+  // ── Mods ──
+  mods = [];
+  parsedDoc.querySelectorAll('#modsGrid .mod-card').forEach(card => {
+    const tags = (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+    mods.push({
+      icon:     card.querySelector('.mod-icon')?.textContent?.trim()  || '📦',
+      name:     card.querySelector('.mod-name')?.textContent?.trim()  || '',
+      desc:     card.querySelector('.mod-desc')?.textContent?.trim()  || '',
+      tags,
+      url:      card.dataset.url      || '',
+      linkType: card.dataset.linkType || '',
+      added:    card.dataset.added    || '',
+      required: !!card.querySelector('.req-badge'),
+    });
+  });
+
+  // ── Changelog ──
+  changelog = [];
+  parsedDoc.querySelectorAll('#changelog .timeline-item').forEach(item => {
+    const badgeEl   = item.querySelector('.version-badge');
+    const badgeText = badgeEl?.textContent?.trim() || 'ОБНОВЛЕНИЕ';
+    const badgeKey  = Object.entries(BADGE_MAP).find(([, v]) => v === badgeText)?.[0] || 'update';
+    // Title is first text node of .timeline-version
+    const titleNode = item.querySelector('.timeline-version');
+    let title = '';
+    if (titleNode) {
+      for (const n of titleNode.childNodes) {
+        if (n.nodeType === 3) { title = n.textContent.trim(); if (title) break; }
+      }
+    }
+    const changes = [...item.querySelectorAll('.timeline-changes li')].map(li => li.innerHTML.trim());
+    changelog.push({
+      date: item.querySelector('.timeline-date')?.textContent?.trim() || '',
+      title, badgeKey, badgeText,
+      latest:  item.classList.contains('latest'),
+      changes,
+    });
+  });
+
+  // ── Gallery ──
+  gallery = [];
+  parsedDoc.querySelectorAll('#gallery .gallery-item').forEach(item => {
+    gallery.push({
+      src:     item.querySelector('img')?.getAttribute('src')        || '',
+      alt:     item.querySelector('img')?.getAttribute('alt')        || '',
+      caption: item.querySelector('.gallery-caption')?.textContent?.trim() || '',
+    });
+  });
+
+  // ── Download info ──
+  const dl = parsedDoc.querySelector('#download');
+  dlInfo = { title:'', desc:'', url:'', fabric:'', mc:'', modCount:'' };
+  if (dl) {
+    dlInfo.title    = dl.querySelector('.download-text h3')?.textContent?.trim() || '';
+    dlInfo.desc     = dl.querySelector('.download-text p')?.textContent?.trim()  || '';
+    dlInfo.url      = dl.querySelector('a.btn-gold')?.getAttribute('href')       || '';
+    dl.querySelectorAll('.meta-item').forEach(m => {
+      const s = m.querySelector('strong')?.textContent || '';
+      const t = m.textContent;
+      if (t.includes('Fabric'))   dlInfo.fabric   = s;
+      else if (t.includes('Minecraft')) dlInfo.mc  = s;
+      else if (t.includes('Модов'))    dlInfo.modCount = s;
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+function renderAll() { renderMods(); renderChangelog(); renderGallery(); renderDownload(); }
+
+// ── Mods ──────────────────────────────────────────────────────
+function renderMods() {
+  const list = document.getElementById('modList');
+  document.getElementById('modCount').textContent = mods.length + ' модов';
+  if (!mods.length) { list.innerHTML = '<div class="empty">Нет модов</div>'; return; }
+
+  list.innerHTML = mods.map((m, i) => {
+    const pills = m.tags.map(t => TAGS[t] ? `<span class="pill ${TAGS[t].pill}">${TAGS[t].label}</span>` : '').join('');
+    const newMark = m.added ? `<span class="pill p-new">✦ Новое</span>` : '';
+    return `<div class="a-mod">
+      <div class="a-mod-icon">${m.icon}</div>
+      <div class="a-mod-info">
+        <div class="a-mod-name">${esc(m.name)}</div>
+        <div class="a-mod-meta">${pills}${newMark}</div>
+      </div>
+      <div class="a-mod-acts">
+        <button class="btn btn-ghost btn-sm" onclick="openModModal(${i})">✏ Изменить</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMod(${i})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Changelog ─────────────────────────────────────────────────
+function renderChangelog() {
+  const list = document.getElementById('tlList');
+  if (!changelog.length) { list.innerHTML = '<div class="empty">Нет записей</div>'; return; }
+
+  list.innerHTML = changelog.map((e, i) => {
+    const cls = e.latest ? ' latest' : '';
+    const star = e.latest ? '<span style="font-size:.7rem;color:var(--gold);margin-left:8px;">★ Последнее</span>' : '';
+    const ch = e.changes.map(c => `<li>${c}</li>`).join('');
+    return `<div class="a-tl${cls}">
+      <div class="a-tl-head">
+        <div class="a-tl-info">
+          <div class="a-tl-date">${esc(e.date)}</div>
+          <div class="a-tl-title">${esc(e.title)}<span class="a-tl-badge">${esc(e.badgeText)}</span>${star}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn btn-ghost btn-sm" onclick="openChangelogModal(${i})">✏ Изменить</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCl(${i})">🗑</button>
+        </div>
+      </div>
+      <ul class="a-tl-changes">${ch}</ul>
+    </div>`;
+  }).join('');
+}
+
+// ── Gallery ────────────────────────────────────────────────────
+function renderGallery() {
+  const grid = document.getElementById('galGrid');
+  document.getElementById('galCount').textContent = gallery.length + ' скриншотов';
+  let html = gallery.map((g, i) => {
+    const thumb = g.src
+      ? `<img class="a-gal-img" src="${escA(g.src)}" alt="${escA(g.alt)}" onerror="this.style.display='none'" />`
+      : `<div class="a-gal-no-img">🖼️</div>`;
+    return `<div class="a-gal">
+      ${thumb}
+      <div class="a-gal-cap">${esc(g.caption)}</div>
+      <div class="a-gal-acts">
+        <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="openGalModal(${i})">✏</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteGal(${i})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+  html += `<div class="gal-add" onclick="openGalModal(-1)">＋</div>`;
+  grid.innerHTML = html;
+}
+
+// ── Download ───────────────────────────────────────────────────
+function renderDownload() {
+  document.getElementById('dlForm').innerHTML = `
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Название версии</div>
+      <input id="dl_title" value="${escA(dlInfo.title)}" placeholder="MONREAL 2.0 — Большое обновление" oninput="markDirty()" />
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Описание</div>
+      <textarea id="dl_desc" oninput="markDirty()">${esc(dlInfo.desc)}</textarea>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Ссылка на скачивание (.mrpack)</div>
+      <input id="dl_url" type="url" value="${escA(dlInfo.url)}" oninput="markDirty()" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Версия Fabric</div>
+        <input id="dl_fabric" value="${escA(dlInfo.fabric)}" placeholder="0.18.4" oninput="markDirty()" />
+      </div>
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Версия Minecraft</div>
+        <input id="dl_mc" value="${escA(dlInfo.mc)}" placeholder="1.21.11" oninput="markDirty()" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Количество модов</div>
+      <input id="dl_modcount" value="${escA(dlInfo.modCount)}" placeholder="64+" oninput="markDirty()" />
+    </div>
+    <button class="btn btn-primary" style="align-self:flex-start;" onclick="saveDl()">💾 Применить</button>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════════════════
+function openModModal(idx) {
+  modalMode = 'mod'; modalIdx = idx;
+  const m = idx >= 0 ? mods[idx] : { icon:'📦', name:'', desc:'', tags:[], url:'', linkType:'', added:'', required:false };
+
+  document.getElementById('modalTitle').textContent = idx >= 0 ? '✏ Редактировать мод' : '+ Новый мод';
+  const tagsHtml = Object.entries(TAGS).map(([k, d]) =>
+    `<label class="tag-check">
+       <input type="checkbox" name="tag" value="${k}" ${m.tags.includes(k) ? 'checked' : ''} />
+       <span>${d.label}</span>
+     </label>`).join('');
+
+  document.getElementById('modalFields').innerHTML = `
+    <div class="form-row">
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Иконка (эмодзи)</div>
+        <input id="m_icon" value="${escA(m.icon)}" maxlength="8" placeholder="📦" />
+      </div>
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Название</div>
+        <input id="m_name" value="${escA(m.name)}" placeholder="My Mod" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Описание</div>
+      <textarea id="m_desc" placeholder="Краткое описание...">${esc(m.desc)}</textarea>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Теги</div>
+      <div class="tags-grid">${tagsHtml}</div>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Ссылка</div>
+      <input id="m_url" type="url" value="${escA(m.url)}" placeholder="https://modrinth.com/mod/..." />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Тип ссылки</div>
+        <select id="m_link">
+          <option value="">Modrinth</option>
+          <option value="github" ${m.linkType === 'github' ? 'selected' : ''}>GitHub</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Дата добавления</div>
+        <input id="m_added" type="date" value="${m.added}" />
+        <div class="field-hint">Пусто → мод не попадает в «Новое»</div>
+      </div>
+    </div>
+    <label class="tag-check">
+      <input type="checkbox" id="m_req" ${m.required ? 'checked' : ''} />
+      <span>Показывать бейдж «ОБЯЗАТЕЛЬНЫЙ»</span>
+    </label>`;
+  openModal();
+}
+
+function saveMod() {
+  const tags = [...document.querySelectorAll('#modalFields input[name=tag]:checked')].map(c => c.value);
+  const m = {
+    icon:     document.getElementById('m_icon').value.trim() || '📦',
+    name:     document.getElementById('m_name').value.trim(),
+    desc:     document.getElementById('m_desc').value.trim(),
+    tags,
+    url:      document.getElementById('m_url').value.trim(),
+    linkType: document.getElementById('m_link').value,
+    added:    document.getElementById('m_added').value,
+    required: document.getElementById('m_req').checked,
+  };
+  if (!m.name) { toast('Введи название мода', 'err'); return; }
+  if (modalIdx >= 0) mods[modalIdx] = m; else mods.push(m);
+  markDirty(); renderMods(); closeModal();
+  toast(modalIdx >= 0 ? 'Мод обновлён' : 'Мод добавлен', 'ok');
+}
+
+// ── Changelog modal ────────────────────────────────────────────
+function openChangelogModal(idx) {
+  modalMode = 'changelog'; modalIdx = idx;
+  const e = idx >= 0 ? changelog[idx] : {
+    date: '', title: '', badgeKey: 'update', badgeText: 'ОБНОВЛЕНИЕ',
+    latest: false, changes: [''],
+  };
+  document.getElementById('modalTitle').textContent = idx >= 0 ? '✏ Редактировать запись' : '+ Новая запись';
+
+  const badgeOpts = Object.entries(BADGE_MAP).map(([k, v]) =>
+    `<option value="${k}" ${e.badgeKey === k ? 'selected' : ''}>${v}</option>`).join('');
+
+  const chHtml = (e.changes.length ? e.changes : ['']).map(c =>
+    `<div class="change-row">
+       <input type="text" value="${escA(c)}" placeholder="Описание изменения..." />
+       <button class="btn-remove" onclick="rmChange(this)">✕</button>
+     </div>`).join('');
+
+  document.getElementById('modalFields').innerHTML = `
+    <div class="form-row">
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Дата</div>
+        <input id="cl_date" value="${escA(e.date)}" placeholder="24 АПРЕЛЯ 2026" />
+      </div>
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Тип</div>
+        <select id="cl_badge">${badgeOpts}</select>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Заголовок</div>
+      <input id="cl_title" value="${escA(e.title)}" placeholder="MONREAL 2.0 — Большое обновление" />
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Список изменений</div>
+      <div class="changes-list" id="changesList">${chHtml}</div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;align-self:flex-start;" onclick="addChange()">+ Добавить пункт</button>
+    </div>
+    <label class="tag-check">
+      <input type="checkbox" id="cl_latest" ${e.latest ? 'checked' : ''} />
+      <span>Отметить как последнее обновление</span>
+    </label>`;
+  openModal();
+}
+
+function addChange() {
+  const d = document.createElement('div');
+  d.className = 'change-row';
+  d.innerHTML = `<input type="text" placeholder="Описание изменения..." />
+    <button class="btn-remove" onclick="rmChange(this)">✕</button>`;
+  document.getElementById('changesList').appendChild(d);
+}
+function rmChange(btn) { btn.parentElement.remove(); }
+
+function saveCl() {
+  const changes = [...document.querySelectorAll('#changesList .change-row input')]
+    .map(i => i.value.trim()).filter(Boolean);
+  const badgeKey = document.getElementById('cl_badge').value;
+  const e = {
+    date:      document.getElementById('cl_date').value.trim(),
+    title:     document.getElementById('cl_title').value.trim(),
+    badgeKey,  badgeText: BADGE_MAP[badgeKey] || 'ОБНОВЛЕНИЕ',
+    latest:    document.getElementById('cl_latest').checked,
+    changes,
+  };
+  if (!e.title) { toast('Введи заголовок', 'err'); return; }
+  if (e.latest) changelog.forEach(x => x.latest = false);
+  if (modalIdx >= 0) changelog[modalIdx] = e; else changelog.unshift(e);
+  markDirty(); renderChangelog(); closeModal();
+  toast(modalIdx >= 0 ? 'Запись обновлена' : 'Запись добавлена', 'ok');
+}
+
+// ── Gallery modal ──────────────────────────────────────────────
+function openGalModal(idx) {
+  modalMode = 'gallery'; modalIdx = idx;
+  const g = idx >= 0 ? gallery[idx] : { src:'', alt:'', caption:'' };
+  document.getElementById('modalTitle').textContent = idx >= 0 ? '✏ Редактировать скриншот' : '+ Добавить скриншот';
+  document.getElementById('modalFields').innerHTML = `
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Путь к файлу</div>
+      <input id="g_src" value="${escA(g.src)}" placeholder="screenshots/screen6.jpg" />
+      <div class="field-hint">Относительный путь или полная URL. Файл нужно загрузить в папку screenshots/ отдельно.</div>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Alt-текст</div>
+      <input id="g_alt" value="${escA(g.alt)}" placeholder="Красивое место на сервере" />
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Подпись (с эмодзи)</div>
+      <input id="g_cap" value="${escA(g.caption)}" placeholder="🌸 Красивое место" />
+    </div>`;
+  openModal();
+}
+
+function saveGal() {
+  const g = {
+    src:     document.getElementById('g_src').value.trim(),
+    alt:     document.getElementById('g_alt').value.trim(),
+    caption: document.getElementById('g_cap').value.trim(),
+  };
+  if (!g.src) { toast('Введи путь к изображению', 'err'); return; }
+  if (modalIdx >= 0) gallery[modalIdx] = g; else gallery.push(g);
+  markDirty(); renderGallery(); closeModal();
+  toast(modalIdx >= 0 ? 'Скриншот обновлён' : 'Скриншот добавлен', 'ok');
+}
+
+// ── Download save ──────────────────────────────────────────────
+function saveDl() {
+  dlInfo = {
+    title:    document.getElementById('dl_title').value.trim(),
+    desc:     document.getElementById('dl_desc').value.trim(),
+    url:      document.getElementById('dl_url').value.trim(),
+    fabric:   document.getElementById('dl_fabric').value.trim(),
+    mc:       document.getElementById('dl_mc').value.trim(),
+    modCount: document.getElementById('dl_modcount').value.trim(),
+  };
+  markDirty();
+  toast('Информация о сборке сохранена', 'ok');
+}
+
+// ── Delete helpers ─────────────────────────────────────────────
+function deleteMod(i) {
+  if (!confirm(`Удалить мод «${mods[i].name}»?`)) return;
+  mods.splice(i, 1); markDirty(); renderMods(); toast('Мод удалён', 'ok');
+}
+function deleteCl(i) {
+  if (!confirm(`Удалить запись «${changelog[i].title}»?`)) return;
+  changelog.splice(i, 1); markDirty(); renderChangelog(); toast('Запись удалена', 'ok');
+}
+function deleteGal(i) {
+  if (!confirm('Удалить скриншот?')) return;
+  gallery.splice(i, 1); markDirty(); renderGallery(); toast('Скриншот удалён', 'ok');
+}
+
+// ── Modal helpers ──────────────────────────────────────────────
+function openModal()   { document.getElementById('modalBg').classList.add('open'); }
+function closeModal()  { document.getElementById('modalBg').classList.remove('open'); }
+function onModalBgClick(e) { if (e.target === document.getElementById('modalBg')) closeModal(); }
+function saveModal()   {
+  if      (modalMode === 'mod')       saveMod();
+  else if (modalMode === 'changelog') saveCl();
+  else if (modalMode === 'gallery')   saveGal();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ═══════════════════════════════════════════════════════════════
+// PUBLISH
+// ═══════════════════════════════════════════════════════════════
+async function publish() {
+  if (!dirty) { toast('Нет несохранённых изменений', 'info'); return; }
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Публикация...';
+  try {
+    const newHtml = buildHtml();
+    const encoded = btoa(unescape(encodeURIComponent(newHtml)));
+    const date    = new Date().toISOString().slice(0, 10);
+    const res = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${PATH}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: `Admin: update site [${date}]`,
+        content: encoded,
+        sha: fileSha,
+      }),
+    });
+    if (!res.ok) {
+      const j = await res.json();
+      throw new Error(j.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    fileSha = data.content.sha;
+    dirty = false;
+    btn.classList.remove('glow');
+    setStatus(`✓ Опубликовано · SHA ${fileSha.slice(0,7)}`);
+    toast('✓ Сайт обновлён!', 'ok');
+  } catch(e) {
+    toast('❌ ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🚀 Опубликовать';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BUILD HTML
+// ═══════════════════════════════════════════════════════════════
+function buildHtml() {
+  const doc = parsedDoc.cloneNode(true);
+
+  // ── Mods ──
+  const modsGrid = doc.getElementById('modsGrid');
+  if (modsGrid) {
+    modsGrid.innerHTML = '\n    ' + mods.map(buildModCard).join('\n\n    ') + '\n\n  ';
+  }
+
+  // ── Changelog ──
+  const tl = doc.querySelector('#changelog .timeline');
+  if (tl) {
+    tl.innerHTML = '\n\n    ' + changelog.map(buildTlItem).join('\n\n    ') + '\n\n  ';
+  }
+
+  // ── Gallery ──
+  const gg = doc.querySelector('#gallery .gallery-grid');
+  if (gg) {
+    gg.innerHTML = '\n    ' + gallery.map((g, i) => buildGalItem(g, i)).join('\n    ') + '\n  ';
+  }
+
+  // ── Download ──
+  const dl = doc.getElementById('download');
+  if (dl) {
+    const h3 = dl.querySelector('.download-text h3'); if (h3) h3.textContent = dlInfo.title;
+    const p  = dl.querySelector('.download-text p');  if (p)  p.textContent  = dlInfo.desc;
+    const ab = dl.querySelector('a.btn-gold');         if (ab) ab.href        = dlInfo.url;
+    dl.querySelectorAll('.meta-item').forEach(m => {
+      const s = m.querySelector('strong'); if (!s) return;
+      const t = m.textContent;
+      if      (t.includes('Fabric'))    s.textContent = dlInfo.fabric;
+      else if (t.includes('Minecraft')) s.textContent = dlInfo.mc;
+      else if (t.includes('Модов'))     s.textContent = dlInfo.modCount;
+    });
+  }
+
+  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+}
+
+function buildModCard(m) {
+  const tagsHtml = m.tags.map(t => TAGS[t] ? `<span class="tag ${TAGS[t].cls}">${TAGS[t].label}</span>` : '').join('');
+  const attrs = [
+    'class="mod-card"',
+    `data-tags="${escA(m.tags.join(','))}"`,
+    m.added   ? `data-added="${escA(m.added)}"` : '',
+    m.url     ? `data-url="${escA(m.url)}"` : '',
+    m.linkType ? `data-link-type="${escA(m.linkType)}"` : '',
+  ].filter(Boolean).join(' ');
+  const reqBadge = m.required ? '\n      <span class="req-badge">ОБЯЗАТЕЛЬНЫЙ</span>' : '';
+  return `<div ${attrs}>${reqBadge}
+      <div class="mod-icon">${m.icon}</div>
+      <div class="mod-info">
+        <div class="mod-name">${esc(m.name)}</div>
+        <div class="mod-desc">${esc(m.desc)}</div>
+        <div class="mod-tags">${tagsHtml}</div>
+      </div>
+    </div>`;
+}
+
+function buildTlItem(e) {
+  const isMajor = e.badgeKey === 'major';
+  const badgeCls = isMajor ? ' new' : '';
+  const ch = e.changes.map(c => `        <li>${c}</li>`).join('\n');
+  return `<div class="timeline-item${e.latest ? ' latest' : ''}">
+      <div class="timeline-date">${esc(e.date)}</div>
+      <div class="timeline-version">
+        ${esc(e.title)}
+        <span class="version-badge${badgeCls}">${esc(e.badgeText)}</span>
+      </div>
+      <ul class="timeline-changes">
+${ch}
+      </ul>
+    </div>`;
+}
+
+function buildGalItem(g, i) {
+  return `<div class="gallery-item" onclick="openLightbox(${i})">
+      <img src="${escA(g.src)}" alt="${escA(g.alt)}" loading="lazy" />
+      <div class="gallery-overlay"><span class="gallery-caption">${esc(g.caption)}</span></div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+function markDirty() {
+  dirty = true;
+  document.getElementById('publishBtn').classList.add('glow');
+}
+
+function setStatus(msg) { document.getElementById('statusText').textContent = msg; }
+
+function toast(msg, type = 'ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function esc(s)  { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escA(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>
