@@ -1072,6 +1072,71 @@
       background: var(--yellow2); animation: pulse 1.5s infinite;
     }
 
+    /* ── Events grid ── */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .event-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 24px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .event-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.35);
+    }
+    .event-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(200,160,32,.06) 0%, transparent 70%);
+    }
+    .ev-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .ev-icon-wrap {
+      font-size: 2.4rem;
+      filter: drop-shadow(0 0 12px rgba(200,220,255,.5));
+    }
+    .ev-status-badge {
+      font-size: .62rem; font-weight: 800; letter-spacing: .1em;
+      padding: 4px 10px; border-radius: 6px;
+    }
+    .ev-active   { background: rgba(34,204,102,.15); color: #22cc66; border: 1px solid rgba(34,204,102,.3); }
+    .ev-inactive { background: rgba(255,255,255,.07); color: var(--text2); border: 1px solid var(--border); }
+    .ev-upcoming { background: rgba(200,160,32,.12); color: var(--yellow2); border: 1px solid rgba(200,160,32,.3); }
+    .ev-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(.65rem, 1.6vw, .85rem);
+      color: var(--text1); margin-bottom: 10px; line-height: 1.6;
+    }
+    .ev-desc {
+      font-size: .82rem; color: var(--text2); line-height: 1.7; margin-bottom: 16px;
+    }
+    .ev-mechanics {
+      list-style: none; padding: 0; margin: 0 0 16px;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .ev-mechanics li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: .8rem; color: var(--text2); line-height: 1.5;
+    }
+    .ev-m-icon { flex-shrink: 0; }
+    .ev-loot-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 8px;
+      background: rgba(200,160,32,.08); border: 1px solid rgba(200,160,32,.2);
+      font-size: .75rem;
+    }
+    .ev-loot-label { color: var(--text2); }
+    .ev-loot-val   { color: var(--yellow2); font-weight: 700; }
+
     /* ── Section fog ── */
     .section-fog {
       position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
@@ -2338,17 +2403,30 @@
 <!-- ── Events ────────────────────────────────────────────────────── -->
 <section id="events">
   <div class="section-label">События сервера</div>
-  <h2><span>События</span></h2>
+  <h2><span>Эвенты</span></h2>
   <p class="section-desc">Ивенты, соревнования и приключения — всё здесь.</p>
 
-  <div class="events-coming">
-    <div class="events-icon">⚔️</div>
-    <div class="events-title">В РАЗРАБОТКЕ</div>
-    <p class="events-desc">
-      Скоро здесь появятся эпические ивенты, турниры и общие приключения для всех игроков сервера.<br><br>
-      Следи за обновлениями в Discord — там первым узнаешь о предстоящих событиях!
-    </p>
-    <div class="events-badge">🔔 СКОРО БУДЕТ ИНТЕРЕСНО</div>
+  <div class="events-grid" id="eventsGrid">
+
+    <div class="event-card" data-ev-icon="❄️" data-ev-status="active" data-ev-loot="Тепло-камень">
+      <div class="ev-header">
+        <div class="ev-icon-wrap">❄️</div>
+        <div class="ev-status-badge ev-active">● АКТИВЕН</div>
+      </div>
+      <div class="ev-name">Вечная мерзлота</div>
+      <p class="ev-desc">Снег и лютый мороз накрывают весь мир. Держитесь поближе к огню — или раздобудьте Тепло-камень, иначе холод возьмёт своё.</p>
+      <ul class="ev-mechanics">
+        <li><span class="ev-m-icon">🌨</span>Постоянный снег во всех биомах</li>
+        <li><span class="ev-m-icon">🧊</span>Заморозка на открытом небе</li>
+        <li><span class="ev-m-icon">🔥</span>Тепло: факел (4 бл.), фонарь (5 бл.), костёр (10 бл.)</li>
+        <li><span class="ev-m-icon">🪨</span>Тепло-камень в руке — полная защита</li>
+      </ul>
+      <div class="ev-loot-row">
+        <span class="ev-loot-label">Крафт:</span>
+        <span class="ev-loot-val">Тепло-камень</span>
+      </div>
+    </div>
+
   </div>
 </section>
 

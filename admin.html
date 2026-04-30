@@ -348,6 +348,7 @@
     <button class="tab-btn" onclick="switchTab('changelog',this)">📰 Новости</button>
     <button class="tab-btn" onclick="switchTab('gallery',this)">📸 Скриншоты</button>
     <button class="tab-btn" onclick="switchTab('download',this)">📦 Сборка</button>
+    <button class="tab-btn" onclick="switchTab('events',this)">🎪 Ивенты</button>
   </div>
 
   <!-- ── MODS ── -->
@@ -384,6 +385,16 @@
       <div class="sec-title">Информация о сборке</div>
     </div>
     <div class="dl-form" id="dlForm"><div class="empty">Загрузка...</div></div>
+  </div>
+
+  <!-- ── EVENTS ── -->
+  <div class="tab-pane" id="tab-events">
+    <div class="sec-header">
+      <div class="sec-title">Ивенты</div>
+      <span class="sec-count" id="evCount">0 ивентов</span>
+      <button class="btn btn-add" onclick="openEventModal(-1)">+ Добавить ивент</button>
+    </div>
+    <div class="ev-list" id="evList"><div class="empty">Загрузка...</div></div>
   </div>
 
 </div><!-- /dashboard -->
@@ -423,6 +434,7 @@ let mods      = [];
 let changelog = [];
 let gallery   = [];
 let dlInfo    = {};
+let events    = [];
 let dirty     = false;
 let modalMode = '';   // 'mod' | 'changelog' | 'gallery'
 let modalIdx  = -1;
@@ -594,12 +606,34 @@ function extractAll() {
       else if (t.includes('Модов'))    dlInfo.modCount = s;
     });
   }
+
+  // ── Events ──
+  events = [];
+  parsedDoc.querySelectorAll('#eventsGrid .event-card').forEach(card => {
+    const mechs = [...card.querySelectorAll('.ev-mechanics li')].map(li => {
+      const icon = li.querySelector('.ev-m-icon')?.textContent?.trim() || '';
+      const text = li.textContent.replace(icon, '').trim();
+      return icon + text;
+    });
+    const statusEl = card.querySelector('.ev-status-badge');
+    let status = 'inactive';
+    if (statusEl?.classList.contains('ev-active'))   status = 'active';
+    if (statusEl?.classList.contains('ev-upcoming')) status = 'upcoming';
+    events.push({
+      icon:  card.dataset.evIcon   || '🎪',
+      status,
+      loot:  card.dataset.evLoot  || '',
+      name:  card.querySelector('.ev-name')?.textContent?.trim()  || '',
+      desc:  card.querySelector('.ev-desc')?.textContent?.trim()  || '',
+      mechs,
+    });
+  });
 }
 
 // ═══════════════════════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════════════════════
-function renderAll() { renderMods(); renderChangelog(); renderGallery(); renderDownload(); }
+function renderAll() { renderMods(); renderChangelog(); renderGallery(); renderDownload(); renderEvents(); }
 
 // ── Mods ──────────────────────────────────────────────────────
 function renderMods() {
@@ -700,6 +734,26 @@ function renderDownload() {
       <input id="dl_modcount" value="${escA(dlInfo.modCount)}" placeholder="64+" oninput="markDirty()" />
     </div>
     <button class="btn btn-primary" style="align-self:flex-start;" onclick="saveDl()">💾 Применить</button>`;
+}
+
+// ── Events ────────────────────────────────────────────────────
+function renderEvents() {
+  const list = document.getElementById('evList');
+  document.getElementById('evCount').textContent = events.length + ' ивентов';
+  if (!events.length) { list.innerHTML = '<div class="empty">Нет ивентов</div>'; return; }
+  const STATUS_LABEL = { active: '● АКТИВЕН', inactive: '● НЕАКТИВЕН', upcoming: '● СКОРО' };
+  list.innerHTML = events.map((ev, i) => `
+    <div class="a-mod">
+      <div class="a-mod-icon">${ev.icon}</div>
+      <div class="a-mod-info">
+        <div class="a-mod-name">${esc(ev.name)}</div>
+        <div class="a-mod-meta"><span class="pill">${STATUS_LABEL[ev.status] || ev.status}</span></div>
+      </div>
+      <div class="a-mod-acts">
+        <button class="btn btn-ghost btn-sm" onclick="openEventModal(${i})">✏ Изменить</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEvent(${i})">🗑</button>
+      </div>
+    </div>`).join('');
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -912,6 +966,83 @@ function deleteGal(i) {
   gallery.splice(i, 1); markDirty(); renderGallery(); toast('Скриншот удалён', 'ok');
 }
 
+// ── Events modal ──────────────────────────────────────────────
+function openEventModal(idx) {
+  modalMode = 'event'; modalIdx = idx;
+  const ev = idx >= 0 ? events[idx] : { icon:'🎪', name:'', desc:'', status:'active', loot:'', mechs:[''] };
+  document.getElementById('modalTitle').textContent = idx >= 0 ? '✏ Редактировать ивент' : '+ Новый ивент';
+
+  const mechsHtml = (ev.mechs.length ? ev.mechs : ['']).map(m =>
+    `<div class="change-row">
+       <input type="text" value="${escA(m)}" placeholder="🌨 Описание механики..." />
+       <button class="btn-remove" onclick="rmChange(this)">✕</button>
+     </div>`).join('');
+
+  document.getElementById('modalFields').innerHTML = `
+    <div class="form-row">
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Иконка</div>
+        <input id="ev_icon" value="${escA(ev.icon)}" maxlength="8" placeholder="❄️" />
+      </div>
+      <div class="form-group">
+        <div class="field-label" style="margin-bottom:6px;">Статус</div>
+        <select id="ev_status">
+          <option value="active"   ${ev.status==='active'   ? 'selected':''}>● Активен</option>
+          <option value="inactive" ${ev.status==='inactive' ? 'selected':''}>● Неактивен</option>
+          <option value="upcoming" ${ev.status==='upcoming' ? 'selected':''}>● Скоро</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Название</div>
+      <input id="ev_name" value="${escA(ev.name)}" placeholder="Название ивента" />
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Описание</div>
+      <textarea id="ev_desc" placeholder="Описание ивента...">${esc(ev.desc)}</textarea>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Механики (по одной в строке)</div>
+      <div class="changes-list" id="mechsList">${mechsHtml}</div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;align-self:flex-start;" onclick="addMech()">+ Добавить механику</button>
+    </div>
+    <div class="form-group">
+      <div class="field-label" style="margin-bottom:6px;">Лут / Крафт (необязательно)</div>
+      <input id="ev_loot" value="${escA(ev.loot)}" placeholder="Тепло-камень" />
+    </div>`;
+  openModal();
+}
+
+function addMech() {
+  const d = document.createElement('div');
+  d.className = 'change-row';
+  d.innerHTML = `<input type="text" placeholder="🌨 Описание механики..." />
+    <button class="btn-remove" onclick="rmChange(this)">✕</button>`;
+  document.getElementById('mechsList').appendChild(d);
+}
+
+function saveEvent() {
+  const mechs = [...document.querySelectorAll('#mechsList .change-row input')]
+    .map(i => i.value.trim()).filter(Boolean);
+  const ev = {
+    icon:   document.getElementById('ev_icon').value.trim()   || '🎪',
+    status: document.getElementById('ev_status').value,
+    name:   document.getElementById('ev_name').value.trim(),
+    desc:   document.getElementById('ev_desc').value.trim(),
+    loot:   document.getElementById('ev_loot').value.trim(),
+    mechs,
+  };
+  if (!ev.name) { toast('Введи название ивента', 'err'); return; }
+  if (modalIdx >= 0) events[modalIdx] = ev; else events.push(ev);
+  markDirty(); renderEvents(); closeModal();
+  toast(modalIdx >= 0 ? 'Ивент обновлён' : 'Ивент добавлен', 'ok');
+}
+
+function deleteEvent(i) {
+  if (!confirm(`Удалить ивент «${events[i].name}»?`)) return;
+  events.splice(i, 1); markDirty(); renderEvents(); toast('Ивент удалён', 'ok');
+}
+
 // ── Modal helpers ──────────────────────────────────────────────
 function openModal()   { document.getElementById('modalBg').classList.add('open'); }
 function closeModal()  { document.getElementById('modalBg').classList.remove('open'); }
@@ -920,6 +1051,7 @@ function saveModal()   {
   if      (modalMode === 'mod')       saveMod();
   else if (modalMode === 'changelog') saveCl();
   else if (modalMode === 'gallery')   saveGal();
+  else if (modalMode === 'event')     saveEvent();
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
@@ -1000,6 +1132,12 @@ function buildHtml() {
     });
   }
 
+  // ── Events ──
+  const eg = doc.getElementById('eventsGrid');
+  if (eg) {
+    eg.innerHTML = '\n    ' + events.map(buildEventCard).join('\n\n    ') + '\n\n  ';
+  }
+
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
 }
 
@@ -1043,6 +1181,37 @@ function buildGalItem(g, i) {
   return `<div class="gallery-item" onclick="openLightbox(${i})">
       <img src="${escA(g.src)}" alt="${escA(g.alt)}" loading="lazy" />
       <div class="gallery-overlay"><span class="gallery-caption">${esc(g.caption)}</span></div>
+    </div>`;
+}
+
+function buildEventCard(ev) {
+  const STATUS = {
+    active:   { cls: 'ev-active',   label: '● АКТИВЕН' },
+    inactive: { cls: 'ev-inactive', label: '● НЕАКТИВЕН' },
+    upcoming: { cls: 'ev-upcoming', label: '● СКОРО' },
+  };
+  const st = STATUS[ev.status] || STATUS.inactive;
+  const mechsHtml = ev.mechs.map(m => {
+    const match = m.match(/^(\p{Emoji}|\S{1,3})\s*(.*)/u);
+    const icon = match ? match[1] : '';
+    const text = match ? match[2] : m;
+    return `<li><span class="ev-m-icon">${icon}</span>${esc(text)}</li>`;
+  }).join('\n        ');
+  const lootHtml = ev.loot ? `
+      <div class="ev-loot-row">
+        <span class="ev-loot-label">Крафт:</span>
+        <span class="ev-loot-val">${esc(ev.loot)}</span>
+      </div>` : '';
+  return `<div class="event-card" data-ev-icon="${escA(ev.icon)}" data-ev-status="${escA(ev.status)}" data-ev-loot="${escA(ev.loot)}">
+      <div class="ev-header">
+        <div class="ev-icon-wrap">${ev.icon}</div>
+        <div class="ev-status-badge ${st.cls}">${st.label}</div>
+      </div>
+      <div class="ev-name">${esc(ev.name)}</div>
+      <p class="ev-desc">${esc(ev.desc)}</p>
+      <ul class="ev-mechanics">
+        ${mechsHtml}
+      </ul>${lootHtml}
     </div>`;
 }
 
